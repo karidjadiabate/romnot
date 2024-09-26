@@ -25,6 +25,36 @@
     <title>Professeur</title>
 
 </head>
+<style>
+    /* Make the choice container a flexbox */
+    .select2-container--default .select2-selection--multiple .select2-selection__choice {
+        justify-content: flex-start;
+        align-items: center;
+        background-color: #85206f;
+        border-radius: 20px;
+
+    }
+
+    /* Ensure the cross button is on the left */
+    .select2-container--default .select2-selection--multiple .select2-selection__choice__remove span {
+        background-color: #4274a9;
+        /* margin-left: 70px !important; */
+
+    }
+
+    /* Ensure the text is after the cross */
+    .select2-container--default .select2-selection--multiple .select2-selection__choice__display span {
+        /* order: 2 !important; */
+        order: 1 !important;
+        margin-right: 40px;
+        /* Position the text after the cross */
+        white-space: nowrap;
+        overflow: hidden;
+        background-color: #13286c
+            /* text-overflow: ellipsis; */
+            /* Truncate if text is too long */
+    }
+</style>
 
 <body>
     <!-- header -->
@@ -117,7 +147,6 @@
                         <th>Prénoms</th>
                         <th>Email</th>
                         <th>Contact</th>
-                        <th>Adresse</th>
                         <th>Matière</th>
                         <th>Classes</th>
                         <th class="no-print">Action</th>
@@ -147,7 +176,6 @@
                             <td data-label="Prenoms">{{ $professeur->prenom }}</td>
                             <td data-label="Email">{{ $professeur->email }}</td>
                             <td data-label="Contact">{{ $professeur->contact }}</td>
-                            <td data-label="Adresse">{{ $professeur->adresse }}</td>
                             <td data-label="Matière">{{ $professeur->nommatieres }}</td>
                             <td data-label="Classes">{{ $professeur->nomclasses }}</td>
                             <td data-label="Action" class="action-icons no-print">
@@ -402,20 +430,30 @@
                                         @foreach ($classes as $classe)
                                             <option value="{{ $classe->id }}">{{ $classe->nomclasse }}</option>
                                         @endforeach
-                                        <div class="invalid-feedback">
-                                        </div>
                                     </select>
-
+                                    <div class="invalid-feedback"></div>
                                 </div>
                             </div>
 
 
-                            <div class="col-sm-6">
+
+                            {{-- <div class="col-sm-12">
                                 <select name="role_id" id="role_id" class="form-control rounded-0">
                                     <option value="2">Professeur</option>
                                 </select>
 
+                            </div> --}}
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <select name="role_id" id="role_id" class="form-control">
+                                        <option value="" disabled selected>Rôle</option>
+                                        <option value="1">Professeur</option>
+                                        <option value="2">Étudiant</option>
+                                        <option value="3">Administrateur</option>
+                                    </select>
+                                </div>
                             </div>
+
 
                             <!--- <div class="col-sm-6">
                                 <input type="password" class="form-control" id="password" name="password"
@@ -432,10 +470,10 @@
                             </div> -->
 
                             <div class="modal-footer d-flex justify-content-between">
-                                <button type="submit"
-                                    class="btn btn-success p-3 border-0 rounded">Sauvegarder</button>
-                                <button type="button" class="btn btn-danger  p-3 border-0 rounded"
-                                    data-bs-dismiss="modal">Annuler</button>
+                                <button type="submit" class="btn btn-success p-3 border-0 rounded "
+                                    id="sauve ">Sauvegarder</button>
+                                <button type="button" class="btn btn-danger   p-3 border-0 rounded"
+                                    data-bs-dismiss="modal" style="background-color: #5B6892">Annuler</button>
                             </div>
 
                     </form>
@@ -501,7 +539,7 @@
     </script>
 
     <!-- Bootstrap JS -->
-    <script src="../js/list.js"></script>
+
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <!-- Select2 JS -->
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
@@ -524,12 +562,22 @@
             });
             $('#classeselect3').select2({
                 placeholder: "Classes",
-                allowClear: true,
+                allowClear: false,
+                closeOnSelect: false,
+                tags: true,
             });
 
             $('#matiereselect3').select2({
                 placeholder: "Matière",
                 allowClear: true,
+            });
+
+            $('#role_id').select2({
+                // placeholder: "Rôle",
+                allowClear: false,
+                width: '100%',
+                minimumResultsForSearch: Infinity,
+
             });
 
 

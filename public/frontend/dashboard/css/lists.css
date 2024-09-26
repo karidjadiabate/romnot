@@ -114,7 +114,6 @@ h1 {
 
 .select2-container--default .select2-results {
     background-color: #fff;
-    /* border: 2px solid #4A41C5; */
     color: #4A41C5;
     z-index: 1050;
 }
@@ -155,10 +154,7 @@ select.form-control:focus {
     color: white !important;
 }
 
-/* .select2-container--default .select2-results__option--selected {
-    background-color: #1e7e34 !important;
-    color: white !important;
-} */
+
 
 .modal {
     z-index: 1051;
@@ -203,7 +199,7 @@ select.form-control:focus {
 
 }
 
-.select2-container--default .select2-selection--multiple .select2-selection__choice {
+/* .select2-container--default .select2-selection--multiple .select2-selection__choice {
     color: #fff;
     background-color: blue;
     padding: .3rem .5rem;
@@ -214,23 +210,21 @@ select.form-control:focus {
     max-width: 100%;
     gap: 0.5rem;
     flex-shrink: 1;
-}
+} */
 
-.select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+/* .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
     color: black;
     background-color: white;
     width: 10px;
     height: 10px;
     border-radius: 50%;
     cursor: pointer;
-    /* margin-top: 2px; */
-    /* margin-left: 2px; */
     display: flex;
     align-items: center;
     justify-content: center;
     transition: background-color 0.3s, color 0.3s;
     font-size: 14px !important;
-}
+} */
 
 .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover {
     background-color: #f0f0f0;
@@ -320,8 +314,13 @@ select.form-control option:checked {
     padding-top: 0;
 }
 
+/* bouton select */
 
-
+.select2-container--default .select2-selection--single .select2-selection__arrow b {
+    border-color: #4A41C5 transparent transparent transparent;
+    border-width: 5px 5px 0 5px;
+    border-style: solid;
+}
 
 /*  */
 /*  */
