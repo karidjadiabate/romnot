@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="{{ asset('frontend/dashboard/html/admin.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/dashboard/css/lists.css') }}">
 
-    <title>Registration Form</title>
+    <title>Sujet</title>
 </head>
 
 <body>
