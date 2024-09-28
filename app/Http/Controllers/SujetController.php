@@ -7,6 +7,7 @@ use App\Http\Requests\StoreSujetRequest;
 use App\Http\Requests\UpdateSujetRequest;
 use App\Models\Classe;
 use App\Models\EtablissementFiliere;
+use App\Models\EtablissementMatiere;
 use App\Models\Filiere;
 use App\Models\Matiere;
 use App\Models\TypeSujet;
@@ -25,7 +26,7 @@ class SujetController extends Controller
 
         if(auth()->user()->role_id === 2){
             $listesujets = $flistesujet->listesujetbyprof();
-        }elseif(auth()->user()->role_id === 3){
+        }elseif(auth()->user()->role_id === 5){
             $listesujets = $flistesujet->listesujetbyadmin();
         }
 
@@ -49,7 +50,7 @@ class SujetController extends Controller
         $filiere = new Filiere();
 
         /* $filieres = $filiere->listefilierebyecole(); */
-        $filieres = EtablissementFiliere::with('filiere')->where('etablissement_id', auth()->user()->etablissement_id)->get();
+        $listefilieres = EtablissementFiliere::with('filiere')->where('etablissement_id', $ecoleId)->get();
 
 
         if ($userRole === 2) {
@@ -59,7 +60,7 @@ class SujetController extends Controller
             // Convertissez la chaîne 'matiere_id' en tableau
             $matiereIds = explode(',', $user->matiere_id);
             // Utilisez ce tableau pour récupérer les matières
-            $professeurMatiere = Matiere::findMany($matiereIds);
+            $professeurMatiere = EtablissementMatiere::findMany($matiereIds);
 
         } elseif ($userRole === 5) {
             // Si l'utilisateur est un administrateur, récupérer toutes les classes de l'école
@@ -84,11 +85,12 @@ class SujetController extends Controller
         // Obtenir toutes les matières pour l'administrateur, sinon inclure la matière du professeur (si disponible)
         $matieres = ($userRole === 5) ? $matieres = $fmatiere->listematierebyecole() : Matiere::whereIn('cycle_id', $cycleIds)->get();
 
+
         if ($professeurMatiere) {
             $matieres->push($professeurMatiere);
         }
 
-        return view('admin.sujet.creersujet',compact('typessujets','matieres','professeurMatiere','classes','filieres'));
+        return view('admin.sujet.creersujet',compact('typessujets','matieres','professeurMatiere','classes','listefilieres'));
     }
 
     /**
@@ -118,16 +120,13 @@ class SujetController extends Controller
 
 
         // Récupérer la matière associée
-        $matiere = Matiere::find($validated['matiere_id']);
+        $matiere = EtablissementMatiere::find($validated['matiere_id']);
 
         if (!$matiere) {
             return redirect()->back()->withErrors(['matiere_error' => 'La matière sélectionnée est invalide.']);
         }
 
-        // Générer le code pour le sujet basé sur le nom de la matière
-        $latestSubject = Sujet::where('matiere_id', $matiere->id)->latest()->first();
-        $count = $latestSubject ? (int) substr($latestSubject->code, -2) + 1 : 1;
-        $code = strtoupper(substr($matiere->nommatiere, 0, 4)) . str_pad($count, 2, '0', STR_PAD_LEFT);
+
 
         // Calculer le total des points des réponses
         $totalPoints = 0;
@@ -145,14 +144,26 @@ class SujetController extends Controller
         } */
 
 
+        $etablissementId = auth()->user()->etablissement_id;
+
+        $lastCode = EtablissementFiliere::where('etablissement_id', $etablissementId)
+        ->orderBy('code', 'desc')
+        ->first();
+
+        $lastCodeNumber = $lastCode ? (int) substr($lastCode->code, 1) : 0;
+
+        // Générer le nouveau code
+        $newCode = 'S' . str_pad(++$lastCodeNumber, 3, '0', STR_PAD_LEFT);
+
         // Sauvegarder le sujet avec le statut par défaut
         $subject = Sujet::create([
-            'code' => $code, // Code généré automatiquement
+            'code' => $newCode, // Code généré automatiquement
             'type_sujet_id' => $validated['type_sujet_id'],
-            'filiere_id' => $validated['filiere_id'],
-            'matiere_id' => $validated['matiere_id'],
+            'etablissement_filiere_id' => $validated['filiere_id'],
+            'etablissement_matiere_id' => $validated['matiere_id'],
             'classe_id' => $validated['classe_id'],
             'noteprincipale' => $validated['noteprincipale'],
+            'consigne' => $validated['consigne'],
             'heure' => $validated['heure'],
             'status' => 'non-corrigé',
             'user_id' => auth()->user()->id,
@@ -198,7 +209,7 @@ class SujetController extends Controller
 
         if (auth()->user()->role_id === 2) {
             return redirect()->route('sujet.professeur')->with('success', 'Sujet créé avec succès.');
-        } elseif (auth()->user()->role_id === 3) {
+        } elseif (auth()->user()->role_id === 5) {
             return redirect()->route('sujet.admin')->with('success', 'Sujet créé avec succès.');
         }
     }

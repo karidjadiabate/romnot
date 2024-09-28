@@ -110,7 +110,7 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        $isSuperUser = auth()->user()->role_id === 4;
+        $isSuperUser = auth()->user()->role_id === 6;
 
         $media = $request->file('file');
         $name = null;
@@ -154,7 +154,7 @@ class UserController extends Controller
         $adminEcoleId = null;
         if ($isSuperUser) {
             $adminEcoleId = $request->etablissement_id;
-        } elseif (auth()->user()->role_id === 3) {
+        } elseif (auth()->user()->role_id === 5) {
             $adminEcoleId = auth()->user()->etablissement_id;
         }
 
@@ -276,7 +276,7 @@ class UserController extends Controller
             return to_route('etudiant')->with('danger','Etudiant supprimé avec success');
         }
 
-        if ($user->role_id == 3) {
+        if ($user->role_id == 5) {
             return to_route('administrateur')->with('danger','Administrateur supprimé avec success');
         }
 

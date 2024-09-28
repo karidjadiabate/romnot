@@ -23,8 +23,8 @@ class Matiere extends Model
         $ecoleId = auth()->user()->etablissement_id;
 
         $listematiere = DB::table('etablissement_matiere AS em')
-            ->where('etablissement_id','=', $ecoleId)
             ->join('matieres AS m','m.id','=','em.matiere_id')
+            ->where('etablissement_id','=', $ecoleId)
             ->select('em.id','nommatiere')
             ->get();
 

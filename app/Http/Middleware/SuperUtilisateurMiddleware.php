@@ -18,7 +18,7 @@ class SuperUtilisateurMiddleware
         {
             if (auth()->check()) {
                 $user = auth()->user();
-                if ($user->role_id === 4) {
+                if ($user->role_id === 6) {
                     return $next($request);
                 } else {
                     abort(403, 'Accès refusé');

@@ -72,7 +72,7 @@ class User extends Authenticatable
     {
         $administrateurs = DB::table('users AS u')
             ->join('etablissements AS e', 'e.id', '=', 'u.etablissement_id')
-            ->where('u.role_id', '=', 3)
+            ->where('u.role_id', '=', 5)
             ->select('u.id', 'u.nom','u.prenom','u.image', 'u.contact', 'u.adresse', 'e.nometablissement','u.etablissement_id','u.email','u.password')
             ->get();
 

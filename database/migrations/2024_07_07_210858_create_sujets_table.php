@@ -29,6 +29,7 @@ return new class extends Migration
             $table->foreignIdFor(User::class);
             $table->foreignIdFor(Etablissement::class);
             $table->integer('noteprincipale');
+            $table->string('consigne')->nullable();
             $table->time('heure');
             $table->enum('status', ['corrige', 'non-corrige']);
             $table->timestamps();

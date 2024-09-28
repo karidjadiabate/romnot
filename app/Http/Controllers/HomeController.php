@@ -12,15 +12,15 @@ class HomeController extends Controller
         if (Auth::check()) {
             $user = Auth::user();
 
-            if ($user->role_id === 4) {
+            if ($user->role_id == 6) {
                 return redirect()->route('superadmin.dashboard');
             }
 
-            if ($user->role_id === 3) {
+            if ($user->role_id == 5) {
                 return redirect()->route('admin.dashboard');
             }
 
-            if ($user->role_id === 2) {
+            if ($user->role_id == 2) {
                 return redirect()->route('professeur.dashboard');
             }
 

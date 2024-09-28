@@ -516,7 +516,7 @@
                                     transform="translate(0 -16)" fill="#4a41c5" />
                             </svg> Compte</a>
                     </li>
-                    @if (intval(auth()->user()->role_id) === 3)
+                    @if (auth()->user()->role_id == 5)
                         <li><a class="dropdown-item li-item" href="{{ route('apropos.admin') }}">
                                 <!-- SVG pour A propos -->
                                 <svg xmlns="http://www.w3.org/2000/svg" width="13.729" height="27.457"
@@ -529,7 +529,7 @@
                                         transform="translate(-32.568)" fill="#4a41c5" />
                                 </svg> A propos</a>
                         </li>
-                    @elseif(intval(auth()->user()->role_id) === 2)
+                    @elseif(auth()->user()->role_id == 2)
                         <li><a class="dropdown-item li-item" href="{{ route('apropos.professeur') }}">
                                 <!-- SVG pour A propos -->
                                 <svg xmlns="http://www.w3.org/2000/svg" width="13.729" height="27.457"
@@ -542,7 +542,7 @@
                                         transform="translate(-32.568)" fill="#4a41c5" />
                                 </svg> A propos</a>
                         </li>
-                    @elseif(intval(auth()->user()->role_id) === 4)
+                    @elseif(auth()->user()->role_id == 6)
                         <li><a class="dropdown-item li-item" href="{{ route('apropos.superadmin') }}">
                                 <!-- SVG pour A propos -->
                                 <svg xmlns="http://www.w3.org/2000/svg" width="13.729" height="27.457"
@@ -557,7 +557,7 @@
                         </li>
                     @endif
 
-                    @if (intval(auth()->user()->role_id) === 3)
+                    @if (auth()->user()->role_id == 5)
                         <li><a class="dropdown-item li-item" href="{{ route('aideconfidentialite.admin') }}">
                                 <!-- SVG pour Aide & Confidentialité -->
                                 <svg xmlns="http://www.w3.org/2000/svg" width="17.664" height="35.327"
@@ -570,7 +570,7 @@
                                         transform="translate(-31.584 -45.505)" fill="#4a41c5" />
                                 </svg> Aide & confidentialité</a>
                         </li>
-                    @elseif(intval(auth()->user()->role_id) === 2)
+                    @elseif(auth()->user()->role_id == 2)
                         <li><a class="dropdown-item li-item" href="{{ route('aideconfidentialite.professeur') }}">
                                 <!-- SVG pour Aide & Confidentialité -->
                                 <svg xmlns="http://www.w3.org/2000/svg" width="17.664" height="35.327"
@@ -583,7 +583,7 @@
                                         transform="translate(-31.584 -45.505)" fill="#4a41c5" />
                                 </svg> Aide & confidentialité</a>
                         </li>
-                    @elseif(intval(auth()->user()->role_id) === 4)
+                    @elseif(auth()->user()->role_id == 6)
                         <li><a class="dropdown-item li-item" href="{{ route('aideconfidentialite.superadmin') }}">
                                 <!-- SVG pour Aide & Confidentialité -->
                                 <svg xmlns="http://www.w3.org/2000/svg" width="17.664" height="35.327"
@@ -643,7 +643,7 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     </li>
                     <!-- tableau de bord -->
-                    @if (intval(auth()->user()->role_id) === 4)
+                    @if (auth()->user()->role_id == 6)
                         <li class="nav-item" id="tableau">
                             <a class="nav-link " href="/superadmin">
                                 <div class="icon-text-container">
@@ -657,7 +657,7 @@
                                 </div>
                             </a>
                         </li>
-                    @elseif (intval(auth()->user()->role_id) === 3)
+                    @elseif (auth()->user()->role_id == 5)
                         <li class="nav-item" id="tableau">
                             <a class="nav-link" href="/admin">
                                 <div class="icon-text-container">
@@ -671,7 +671,7 @@
                                 </div>
                             </a>
                         </li>
-                    @elseif(intval(auth()->user()->role_id) === 2)
+                    @elseif(auth()->user()->role_id == 2)
                         <li class="nav-item" id="tableau">
                             <a class="nav-link" href="/professeur">
                                 <div class="icon-text-container">
@@ -687,7 +687,7 @@
                         </li>
                     @endif
                     <!-- role -->
-                    @if (intval(auth()->user()->role_id) === 4)
+                    @if (auth()->user()->role_id == 6)
                         {{--  <li class="nav-item" id="role">
                             <a class="nav-link" href="#"onclick="setActive(event, 'role')">
                                 <div class="icon-text-container">
@@ -778,7 +778,7 @@
                         </li>
                     @endif
 
-                    @if (intval(auth()->user()->role_id) === 3)
+                    @if (auth()->user()->role_id == 5)
                         <!-- niveaux
                         <li class="nav-item" id="niveaux">
                             <a class="nav-link " href="{{ route('niveau.index') }}">
@@ -881,7 +881,7 @@
                         </li>
                     @endif
 
-                    @if (auth()->user()->role_id == 4)
+                    @if (auth()->user()->role_id == 6)
 
 
                     <li class="nav-item" id="Filiere">
@@ -917,7 +917,7 @@
                     @endif
 
 
-                    @if (auth()->user()->role_id == 3)
+                    @if (auth()->user()->role_id == 5)
                         <!-- calendrier -->
                         <li class="nav-item" id="calendrier">
                             <a class="nav-link " href="{{ route('calendrier.admin') }}">
@@ -932,7 +932,7 @@
                                 </div>
                             </a>
                         </li>
-                    @elseif(intval(auth()->user()->role_id) === 2)
+                    @elseif(auth()->user()->role_id == 2)
                         <li class="nav-item" id="calendrier">
                             <a class="nav-link " href="{{ route('calendrier.professeur') }}">
                                 <div class="icon-text-container">
@@ -948,7 +948,7 @@
                         </li>
                     @endif
                     <!-- sujet -->
-                    @if (intval(auth()->user()->role_id) === 2)
+                    @if (auth()->user()->role_id == 2)
                         <li class="nav-item" id="sujet">
                             <a class="nav-link" href="{{ route('sujet.professeur') }}">
                                 <div class="icon-text-container">
@@ -985,7 +985,7 @@
                                 </div>
                             </a>
                         </li>
-                    @elseif(intval(auth()->user()->role_id) === 3)
+                    @elseif(auth()->user()->role_id == 5)
                         <li class="nav-item" id="sujet">
                             <a class="nav-link" href="{{ route('sujet.admin') }}">
                                 <div class="icon-text-container">
