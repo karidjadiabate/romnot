@@ -14,10 +14,7 @@ class Niveau extends Model
 
     public function listeniveauxbyecole()
     {
-        $ecoleId = auth()->user()->etablissement_id;
-
         $listefiliere = DB::table('niveaux')
-            ->where('etablissement_id','=', $ecoleId)
             ->select('id','nomniveau','code')
             ->get();
 

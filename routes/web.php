@@ -9,10 +9,13 @@ use App\Http\Controllers\DemoController;
 use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\EtablissementController;
 use App\Http\Controllers\FiliereController;
+use App\Http\Controllers\FiliereEtablissementController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MatiereController;
+use App\Http\Controllers\MatiereEtablissementController;
 use App\Http\Controllers\MonCompteController;
 use App\Http\Controllers\NiveauController;
+use App\Http\Controllers\ParametreController;
 use App\Http\Controllers\PasswordChangeController;
 use App\Http\Controllers\SujetController;
 use App\Http\Controllers\UserController;
@@ -64,20 +67,36 @@ Route::prefix('superadmin')->middleware('SuperUtilisateur')->group(function () {
     Route::post('/changepassword/update', [MonCompteController::class, 'updatepassword'])->name('updatepassword.superadmin');
     Route::post('/updateprofile/{id}', [MoncompteController::class, 'updateprofile'])->name('updateprofile.superadmin');
 
+    Route::resource('filiere', FiliereController::class);
+    Route::resource('matiere', MatiereController::class);
+
+    Route::post('matiere/import', [MatiereController::class, 'importMatiereExcelData'])->name('superadmin.importmatiere');
+    Route::post('filiere/import', [FiliereController::class, 'importFiliereExcelData'])->name('superadmin.importfiliere');
 });
 
 
  //ADMIN
  Route::prefix('admin')->middleware(['auth', 'admin', 'checkFromDemandeInscription','changepassword'])->group(function () {
 
-    Route::get('/',[DashboardController::class,'dashboard'])->name('admin.dashboard');;
-    Route::resource('matiere', MatiereController::class);
-    Route::resource('filiere', FiliereController::class);
+    Route::get('/',[DashboardController::class,'dashboard'])->name('admin.dashboard');
+
+    Route::get('/matiere',[MatiereEtablissementController::class,'index'])->name('admin.matiereindex');
+    Route::post('/matiere',[MatiereEtablissementController::class,'store'])->name('storeadmin.matiere');
+    Route::put('/matiere/{id}',[MatiereEtablissementController::class,'update'])->name('updateadmin.matiere');
+    Route::delete('/matiere/{id}',[MatiereEtablissementController::class,'destroy'])->name('destroyadmin.matiere');
+
+    Route::get('/filiere',[FiliereEtablissementController::class,'index'])->name('admin.filiereindex');
+    Route::post('/filiere',[FiliereEtablissementController::class,'store'])->name('storeadmin.filiere');
+    Route::put('/filiere/{id}',[FiliereEtablissementController::class,'update'])->name('updateadmin.filiere');
+    Route::delete('/filiere/{id}',[FiliereEtablissementController::class,'destroy'])->name('destroyadmin.filiere');
+
+    /* Route::resource('filiere', FiliereController::class); */
     Route::resource('classe', ClasseController::class);
     Route::resource('niveau', NiveauController::class);
     Route::get('/professeur',[UserController::class,'professeur'])->name('professeur');
     Route::get('/etudiant',[UserController::class,'etudiant'])->name('etudiant');
     Route::get('/calendrier',[CalendrierController::class,'index'])->name('calendrier.admin');
+
     Route::get('/apropos',[ClientController::class,'apropos'])->name('apropos.admin');
     Route::get('/aideconfidentialite',[ClientController::class,'aideconfidentialite'])->name('aideconfidentialite.admin');
 
@@ -88,7 +107,7 @@ Route::prefix('superadmin')->middleware('SuperUtilisateur')->group(function () {
     Route::get('/creersujet',[SujetController::class,'create'])->name('sujetadmin.create');
     Route::post('/sujet',[SujetController::class,'store'])->name('sujetadmin.store');
 
-
+    Route::get('/parametre',[ParametreController::class,'index'])->name('parametre.admin');
 });
 
 

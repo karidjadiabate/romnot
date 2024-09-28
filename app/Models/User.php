@@ -34,6 +34,7 @@ class User extends Authenticatable
         'password',
         'adresse',
         'image',
+        'filiere_id',
         'from_demande_inscription'
     ];
 
@@ -116,7 +117,7 @@ class User extends Authenticatable
             ->where('u.role_id', '=', 1)
             ->where('u.etablissement_id', '=', $ecoleId)
             ->select('u.id', 'u.nom','u.prenom','u.image', 'u.contact', 'e.nometablissement','u.email','u.adresse','u.password',
-            'u.matricule','c.nomclasse','u.datenaiss','u.classe_id','genre')
+            'u.matricule','c.nomclasse','u.datenaiss','u.classe_id','genre','u.filiere_id')
             ->get();
 
         return $etudiants;
@@ -150,9 +151,19 @@ class User extends Authenticatable
     {
         $ecoleId = auth()->user()->etablissement_id;
 
-        $nbfiliere = Filiere::where('etablissement_id', $ecoleId)
+        $nbfiliere = EtablissementFiliere::where('etablissement_id', $ecoleId)
             ->count();
 
         return $nbfiliere;
+    }
+
+    public function nbsujetgenereparecole()
+    {
+        $ecoleId = auth()->user()->etablissement_id;
+
+        $nbsujet = Sujet::where('etablissement_id',$ecoleId)
+            ->count();
+
+        return $nbsujet;
     }
 }

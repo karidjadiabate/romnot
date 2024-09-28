@@ -63,6 +63,18 @@
             <!-- Table for listing teachers -->
             <div id="noResults">Aucun résultat trouvé</div>
             <div class="table-responsive">
+                @if (session('error'))
+                    <div class="alert alert-danger">
+                        {{ session('error') }}
+                    </div>
+                @endif
+
+                @if (session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
                 <table id="demoTable" class="table">
                     <thead class="table-aaa">
                         <tr class="aa">
@@ -77,9 +89,12 @@
                         </tr>
                     </thead>&nbsp;&nbsp;
                     <tbody id="demoTable">
+                        @php
+                            $num = 1;
+                        @endphp
                         @foreach ($listedemandemos as $listedemandemo)
                             <tr>
-                                <td data-label="Identifiant">{{ $listedemandemo->id }}</td>
+                                <td data-label="Identifiant">{{ $num++ }}</td>
                                 <td data-label="Date">{{ $listedemandemo->created_at->format('d/m/Y') }}</td>
                                 <td data-label="Nom">{{ $listedemandemo->nom }}</td>
                                 <td data-label="Prénoms">{{ $listedemandemo->prenom }}</td>

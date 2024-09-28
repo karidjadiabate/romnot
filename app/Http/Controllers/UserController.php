@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\Classe;
 use App\Models\Etablissement;
+use App\Models\EtablissementFiliere;
 use App\Models\Matiere;
 use App\Models\Role;
 use App\Models\User;
@@ -26,10 +27,10 @@ class UserController extends Controller
 
         $connectedUserRole = auth()->user()->role_id;
 
-        if ($connectedUserRole === 4) {
+        if ($connectedUserRole === 6) {
             // Superadmin
-            $roles = Role::whereIn('id', [3])->get();
-        } elseif ($connectedUserRole === 3) {
+            $roles = Role::whereIn('id', [5])->get();
+        } elseif ($connectedUserRole === 5) {
             // Utilisateur avec enseignement supérieur
             $roles = Role::whereIn('id', [1,2])->get();
         } else {
@@ -62,10 +63,10 @@ class UserController extends Controller
 
         $connectedUserRole = auth()->user()->role_id;
 
-        if ($connectedUserRole === 4) {
+        if ($connectedUserRole === 6) {
             // Superadmin
-            $roles = Role::whereIn('id', [3])->get();
-        } elseif ($connectedUserRole === 3) {
+            $roles = Role::whereIn('id', [5])->get();
+        } elseif ($connectedUserRole === 5) {
             // Utilisateur avec enseignement supérieur
             $roles = Role::whereIn('id', [1,2])->get();
         } else {
@@ -83,6 +84,8 @@ class UserController extends Controller
 
         $fclasse = new Classe();
 
+        $listefilieres = EtablissementFiliere::with('filiere')->where('etablissement_id', auth()->user()->etablissement_id)->get();
+
         $classes = $fclasse->listeclassbyecole();
 
         $etudiants = $fetudiant->listeetudiantparecole();
@@ -91,11 +94,10 @@ class UserController extends Controller
 
         $connectedUserRole = auth()->user()->role_id;
 
-        if ($connectedUserRole === 4) {
+        if ($connectedUserRole === 6) {
             // Superadmin
-            $roles = Role::whereIn('id', [3])->get();
-        } elseif ($connectedUserRole === 3) {
-            // Utilisateur avec enseignement supérieur
+            $roles = Role::whereIn('id', [5])->get();
+        } elseif ($connectedUserRole === 5) {
             $roles = Role::whereIn('id', [1,2])->get();
         } else {
             // Autres utilisateurs
@@ -103,7 +105,7 @@ class UserController extends Controller
         }
 
 
-        return view('admin.user.etudiant',compact('etudiants','roles','classes'));
+        return view('admin.user.etudiant',compact('etudiants','roles','classes','listefilieres'));
     }
 
     public function store(Request $request)
@@ -118,12 +120,15 @@ class UserController extends Controller
             $media->storeAs('public/profile', $name);
         }
 
+        $passwordPlain = 'password';
+        $passwordHashed = Hash::make($passwordPlain);
+
         $data = [
             'nom' => $request->nom,
             'prenom' => $request->prenom,
             'email' => $request->email,
             'contact' => $request->contact,
-            'password' => Hash::make($request->password),
+            'password' => $passwordHashed,
             'image' => $name,
             'role_id' => $request->role_id,
             'matiere_id' => $request->matiere_id,
@@ -133,6 +138,7 @@ class UserController extends Controller
             'genre' => $request->genre,
             'datenaiss' => $request->datenaiss,
             'adresse' => $request->adresse,
+            'filiere_id' => $request->filiere_id,
         ];
 
         if ($request->role_id == 1) {
@@ -163,7 +169,7 @@ class UserController extends Controller
             $user->save();
         }
 
-        $user->notify(new NouveauCompteNotification($user->email, $request->password));
+        $user->notify(new NouveauCompteNotification($user->email, $passwordPlain));
 
         if ($user->role_id == 1) {
             $user->classe_id = $request->classe_id;
@@ -224,6 +230,7 @@ class UserController extends Controller
             $user->genre = $request->genre;
             $user->datenaiss = $request->datenaiss;
             $user->adresse = $request->adresse;
+            $user->filiere_id = $request->filiere_id;
         } elseif ($user->role_id == 2) {
             if (is_array($request->matiere_id)) {
                 $user->matiere_id = implode(',', $request->matiere_id);
@@ -242,7 +249,7 @@ class UserController extends Controller
             } else {
                 $user->selected_classes = json_encode([$classes]);
             }
-        } elseif ($user->role_id == 3) {
+        } elseif ($user->role_id == 5) {
             $user->etablissement_id = $request->etablissement_id;
         }
 

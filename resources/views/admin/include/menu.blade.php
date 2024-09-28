@@ -830,7 +830,7 @@
 
                         <!-- filieres -->
                         <li class="nav-item" id="Filiere">
-                            <a class="nav-link " href="{{ route('filiere.index') }}">
+                            <a class="nav-link " href="{{ route('admin.filiereindex') }}">
                                 <div class="icon-text-container">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="31.318" height="34.798"
                                         viewBox="0 0 31.318 34.798">
@@ -843,8 +843,8 @@
                             </a>
                         </li>
 
-                        <li class="nav-item" id="Filiere">
-                            <a class="nav-link" href="{{ route('matiere.index') }}">
+                        <li class="nav-item" id="Matiere">
+                            <a class="nav-link" href="{{ route('admin.matiereindex') }}">
                                 <div class="icon-text-container">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="33.158" height="35"
                                         viewBox="0 0 39.9 42">
@@ -881,10 +881,43 @@
                         </li>
                     @endif
 
+                    @if (auth()->user()->role_id == 4)
 
 
+                    <li class="nav-item" id="Filiere">
+                        <a class="nav-link " href="{{ route('filiere.index') }}">
+                            <div class="icon-text-container">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="31.318" height="34.798"
+                                    viewBox="0 0 31.318 34.798">
+                                    <path id="Tracé_381" data-name="Tracé 381"
+                                        d="M34.318,5.48H9.96a3.48,3.48,0,0,0,0,6.96H34.318V35.058a1.74,1.74,0,0,1-1.74,1.74H9.96A6.96,6.96,0,0,1,3,29.838V8.96A6.96,6.96,0,0,1,9.96,2H32.578a1.74,1.74,0,0,1,1.74,1.74Zm-1.74,5.22H9.96a1.74,1.74,0,0,1,0-3.48H32.578Z"
+                                        transform="translate(-3 -2)" fill="#fff" />
+                                </svg>
+                                <span>Filières</span>
+                            </div>
+                        </a>
+                    </li>
 
-                    @if (intval(auth()->user()->role_id) === 3)
+                    <li class="nav-item" id="Matiere">
+                        <a class="nav-link" href="{{ route('matiere.index') }}">
+                            <div class="icon-text-container">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="33.158" height="35"
+                                    viewBox="0 0 39.9 42">
+                                    <g id="books" transform="translate(-2 -2)">
+                                        <path id="Tracé_511" data-name="Tracé 511"
+                                            d="M41.2,20.2h-.7V12.5h.7a.7.7,0,0,0,0-1.4H37.406A5.243,5.243,0,0,0,33.85,2H7.6a.7.7,0,0,0,0,1.4h.7v7.7H7.6a.7.7,0,0,0,0,1.4h3.794a5.222,5.222,0,0,0,0,7.7H2.7a.7.7,0,1,0,0,1.4h.7v7.7H2.7a.7.7,0,1,0,0,1.4H8.587l-.154.14A5.25,5.25,0,0,0,12.15,39.8h.35v3.5a.7.7,0,0,0,1.2.5l2.3-2.31,2.3,2.31a.7.7,0,0,0,.5.2.588.588,0,0,0,.266-.056A.7.7,0,0,0,19.5,43.3V39.8H38.4a.7.7,0,1,0,0-1.4h-.7V30.7h.7a.7.7,0,1,0,0-1.4H32.506a5.222,5.222,0,0,0,0-7.7H41.2a.7.7,0,0,0,0-1.4ZM36.3,30.7v7.7H19.5V35.6a.7.7,0,0,0-.7-.7H13.2a.7.7,0,0,0-.7.7v2.8h-.35a3.85,3.85,0,1,1,0-7.7Zm2.8-10.5H14.95a3.85,3.85,0,1,1,0-7.7H39.1Z"
+                                            transform="translate(0 0)" fill="#fff" />
+                                    </g>
+                                </svg>
+                                <span>Matieres</span>
+                            </div>
+                        </a>
+                    </li>
+
+                    @endif
+
+
+                    @if (auth()->user()->role_id == 3)
                         <!-- calendrier -->
                         <li class="nav-item" id="calendrier">
                             <a class="nav-link " href="{{ route('calendrier.admin') }}">
@@ -990,7 +1023,7 @@
                             </a>
                         </li>
                         <li class="nav-item" id="parametre">
-                            <a class="nav-link " href="#">
+                            <a class="nav-link " href="{{route('parametre.admin')}}">
                                 <div class="icon-text-container">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                                         <path

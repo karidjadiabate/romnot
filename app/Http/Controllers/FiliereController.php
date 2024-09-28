@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Filiere;
 use App\Http\Requests\StoreFiliereRequest;
 use App\Http\Requests\UpdateFiliereRequest;
+use App\Imports\FiliereImport;
 use App\Models\Niveau;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class FiliereController extends Controller
 {
@@ -16,15 +18,9 @@ class FiliereController extends Controller
     public function index()
     {
 
-        $filiere = new Filiere();
+        $filieres = Filiere::all();
 
-        $filieres = $filiere->listefilierebyecole();
-
-        $fniveau = new Niveau();
-
-        $niveaux = $fniveau->listeniveauxbyecole();
-
-        return view('admin.filiere.listefiliere',compact('filieres','niveaux'));
+        return view('admin.filiere.listefiliere',compact('filieres'));
     }
 
     /**
@@ -91,5 +87,26 @@ class FiliereController extends Controller
         $filiere->delete();
 
         return to_route('filiere.index')->with('danger','Filière supprimée avec success!');
+    }
+
+    public function importFiliereExcelData(Request $request)
+    {
+        // Valider le fichier d'importation
+        $request->validate([
+            'import_file' => [
+                'required',
+                'file'
+            ],
+        ]);
+
+        try {
+            // Importer les données Excel
+            Excel::import(new FiliereImport, $request->file('import_file'));
+
+            return redirect()->back()->with('status', 'Importation réussie avec succès !');
+        } catch (\Exception $e) {
+            // En cas d'erreur, rediriger avec un message d'erreur
+            return redirect()->back()->with('error', 'Erreur lors de l\'importation : ' . $e->getMessage());
+        }
     }
 }

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ajouter un Enseignant</title>
+    <title>Matières</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- FontAwesome for icons (if needed) -->
@@ -62,7 +62,7 @@
                         </ul>
                     </div>
                     <button class="btn btn-custom btn-ajouter" data-bs-toggle="modal" data-bs-target="#matiere"><i
-                            class="fa fa-plus"></i> Ajouter un Matière</button>
+                            class="fa fa-plus"></i> Ajouter une Matière</button>
 
                     <div class="dropdown" id="filterMenu">
                         <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton"
@@ -74,7 +74,7 @@
                                 <a class="dropdown-item dropdown-toggle" href="#"
                                     data-bs-toggle="dropdown">Nom-Matière</a>
                                 <ul class="dropdown-menu">
-                                    @foreach ($matieres as $matiere)
+                                    @foreach ($lesmatieres as $matiere)
                                         <li>
                                             <a class="dropdown-item" href="#"
                                                 onclick="applyFilter('Nom-Matière', '{{ $matiere->nommatiere }}')">
@@ -89,49 +89,42 @@
                     </div>
                 </div>
 
-            </div>
 
+            </div>
             <!-- Table for listing teachers -->
             <div id="noResults">Aucun résultat trouvé</div>
             <div class="table-responsive">
-                @if(session('error'))
-                    <div class="alert alert-danger">
-                        {{ session('error') }}
-                    </div>
-                @endif
-
-                @if(session('status'))
-                    <div class="alert alert-success">
-                        {{ session('status') }}
-                    </div>
-                @endif
-
                 <table id="matiereTable" class="table">
                     <thead class="table-aaa">
                         <tr class="aa">
-                            <th>Identifiant</th>
+                            <th>Code</th>
                             <th>Nom de la Matière</th>
+                            <th>Coefficient</th>
+                            <th>Crédits ECTS</th>
+                            <th>Volume horaire</th>
                             <th class="no-print" style="text-align: center">Action</th>
                         </tr>
                     </thead>&nbsp;&nbsp;
                     <tbody id="matiereTable">
-                        @php
-                            $num = 1;
-                        @endphp
-                        @foreach ($matieres as $matiere)
+
+                        @foreach ($nosmatieres as $matiere)
                             <tr>
-                                <td data-label="Identifiant">{{ $num++ }}</td>
-                                <td data-label="Nom">{{ $matiere->nommatiere }}</td>
+                                <td data-label="Identifiant">{{ $matiere->code }}</td>
+                                <td data-label="Nom">{{ $matiere->matiere->nommatiere }}</td>
+                                <td data-label="coefficient">{{ $matiere->coefficient }}</td>
+                                <td data-label="credit">{{ $matiere->credit }}</td>
+                                <td data-label="volume">{{ $matiere->volumehoraire }} h</td>
                                 <td data-label="Action" style="text-align: center" class="action-icons no-print">
                                     <!-- Bouton de Modification -->
                                     <button type="button" class="btn btn-sm" data-bs-toggle="modal"
-                                        data-bs-target="#editMatiere{{ $matiere->id }}" data-id="{{ $matiere->id }}"
-                                        data-nommatiere="{{ $matiere->nommatiere }}">
+                                        data-bs-target="#editMatiere{{ $matiere->id }}" data-code="{{ $matiere->code }}" data-id="{{ $matiere->id }}"
+                                        data-nommatiere="{{ $matiere->matiere->nommatiere }}" data-coefficient="{{ $matiere->coefficient }}"
+                                        data-credit="{{ $matiere->credit }}" data-volumehoraire="{{ $matiere->volumehoraire }}">
                                         <i class="fas fa-edit"></i>
                                     </button>
                                     <!-- Bouton de Suppression -->
                                     <button type="button" class="btn btn-sm" data-bs-toggle="modal"
-                                        data-bs-target="#deletematiere{{ $matiere->id }}">
+                                        data-bs-target="#deletematiere{{ $matiere->matiere->id }}">
                                         <i class="fas fa-trash-alt"></i>
                                     </button>
                                 </td>
@@ -142,48 +135,75 @@
                                 aria-labelledby="editMatiereLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
+                                        <button type="button" class="custom-close-btn" data-bs-dismiss="modal"
+                                            aria-label="Close">
+                                            <i class="fa-solid fa-xmark"></i> </button>
                                         <h1 class="text-center">Modifier</h1>
-                                        <form action="{{ route('matiere.update', $matiere->id) }}" method="POST"
-                                            class="needs-validation" novalidate>
+                                        <form action="{{ route('updateadmin.matiere', $matiere->id) }}" method="POST" class="needs-validation" novalidate>
                                             @csrf
                                             @method('PUT')
                                             <div class="modal-body">
                                                 <div class="row g-3">
-                                                    <!-- Champ pour le Nom de la Matière -->
-                                                    <div class="col-sm-12">
-                                                        <input type="text" class="form-control" name="nommatiere"
-                                                            placeholder="Nom Etablissement"
-                                                            value="{{ $matiere->nommatiere }}" required>
+                                                    <!-- Sélection des matières -->
+                                                    <div class="col-sm-6">
+                                                        <select class="select2-multiple form-control" name="matiere_id" style="width: 100%" id="matiereeditselect2" disabled>
+                                                            @foreach ($nosmatieres as $matiereOption)
+                                                                <option value="{{ $matiereOption->id }}"
+                                                                    {{ $matiereOption->id == $matiere->matiere_id ? 'selected' : '' }}>
+                                                                    {{ $matiereOption->matiere->nommatiere }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+
+
+                                                    <div class="col-sm-6">
+                                                        <input type="number" name="coefficient" class="form-control" id="editLastName"
+                                                            placeholder="Coefficient" value="{{$matiere->coefficient}}" required>
                                                         <div class="invalid-feedback">
-                                                            Valid last name is required.
                                                         </div>
                                                     </div>
-                                                </div><br>
+
+                                                    <div class="col-sm-6">
+                                                        <input type="number" name="credit" class="form-control" id="editLastName"
+                                                            placeholder="Crédits ECTS / autre système de crédit" value="{{$matiere->credit}}" required>
+                                                        <div class="invalid-feedback">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-sm-6">
+                                                        <input type="number" name="volumehoraire" class="form-control" id="editLastName"
+                                                            placeholder="Volume horaire" value="{{$matiere->volumehoraire}}" required>
+                                                        <div class="invalid-feedback">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <br>
                                                 <div class="d-flex justify-content-around">
-                                                    <button type="submit"
-                                                        class="btn btn-success">Sauvegarder</button>
-                                                    <button type="button" class="btn btn-danger"
-                                                        data-bs-dismiss="modal">Annuler</button>
+                                                    <button type="submit" class="btn btn-success">Sauvegarder</button>
+                                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Annuler</button>
                                                 </div>
                                             </div>
                                         </form>
+
                                     </div>
                                 </div>
                             </div>
 
+
                             <!-- Modal de Suppression -->
                             <div class="modal fade" id="deletematiere{{ $matiere->id }}" tabindex="-1"
                                 aria-labelledby="deleteMatiereLabel" aria-hidden="true">
-                                <div class="modal-dialog">
+                                <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
                                         <div class="modal-body text-center">
                                             <img src="{{ asset('frontend/dashboard/images/images.png') }}"
                                                 width="50" height="50" alt=""><br><br>
-                                            <p id="sure">Êtes-vous sûr?</p>
-                                            <p>Supprimer cette matière ?</p>
+                                                <p id="sure">Êtes-vous sûr?</p>
+                                                <p>supprimer la matière <strong>{{$matiere->matiere->nommatiere}}</strong> ?</p>
                                         </div>
                                         <div class="d-flex justify-content-around">
-                                            <form action="{{ route('matiere.destroy', $matiere->id) }}"
+                                            <form action="{{ route('destroyadmin.matiere', $matiere->id) }}"
                                                 method="POST">
                                                 @csrf
                                                 @method('DELETE')
@@ -232,15 +252,45 @@
                 <button type="button" class="custom-close-btn" data-bs-dismiss="modal" aria-label="Close">
                     <i class="fa-solid fa-xmark"></i></button>
                 <h1 class="text-center">Ajouter</h1>
-                <form action="{{ route('matiere.store') }}" method="POST" class="needs-validation" novalidate>
+                <form action="{{ route('storeadmin.matiere') }}" method="POST" class="needs-validation" novalidate>
                     @csrf
                     <div class="modal-body">
                         <div class="row g-3">
-                            <div class="col-sm-12">
-                                <input type="text" name="nommatiere" class="form-control" id="editLastName"
-                                    placeholder="Nom de la Matière" value="" required>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <select class="select2-multiple form-control"
+                                        name="matiere_id[]" style="width: 100%" id="matiereselect2"
+                                        multiple>
+                                        <option value="">Selectionnez une matière</option>
+                                        @foreach ($lesmatieres as $matiere)
+                                            <option value="{{ $matiere->id }}">
+                                                {{ $matiere->nommatiere }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <div class="invalid-feedback">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <input type="number" name="coefficient" class="form-control" id="editLastName"
+                                    placeholder="Coefficient" required>
                                 <div class="invalid-feedback">
-                                    Valid last name is required.
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <input type="number" name="credit" class="form-control" id="editLastName"
+                                    placeholder="Crédits ECTS / autre système de crédit" required>
+                                <div class="invalid-feedback">
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <input type="number" name="volumehoraire" class="form-control" id="editLastName"
+                                    placeholder="Volume horaire" required>
+                                <div class="invalid-feedback">
                                 </div>
                             </div>
                         </div>
@@ -267,27 +317,24 @@
 
                 <h1 class="modal-title fs-5 text-center" id="importModalLabel">Importer un fichier</h1>
 
-                <form action="{{route('superadmin.importmatiere')}}" method="post" enctype="multipart/form-data"
+                <form action="/path/to/your/upload/handler" method="post" enctype="multipart/form-data"
                     class="needs-validation" novalidate>
-                    @csrf
                     <div class="modal-body">
 
                         <div class="mb-3">
                             <label for="fileInput" class="form-label">Choisissez un fichier à importer</label>
-                            <input type="file" class="form-control" id="fileInput" name="import_file" required>
+                            <input type="file" class="form-control" id="fileInput" name="importedFile" required>
                             <div class="invalid-feedback">
                                 Veuillez sélectionner un fichier.
                             </div>
                         </div>
+                </form>
 
-                         <!-- Modal Footer -->
+                <!-- Modal Footer -->
                 <div class="modal-footer d-flex justify-content-between">
                     <button type="submit" class="btn btn-success">Importer</button>
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Annuler</button>
                 </div>
-                </form>
-
-
             </div>
         </div>
     </div>
@@ -321,7 +368,16 @@
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
     </script>
 
+<script>
+    $(document).ready(function() {
 
+        $('#matiereselect2').select2({
+            placeholder: "Matière",
+            allowClear: true,
+        });
+
+    });
+</script>
 
 </body>
 

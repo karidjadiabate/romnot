@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ajouter un Enseignant</title>
+    <title>Etudiants</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- FontAwesome for icons (if needed) -->
@@ -127,7 +127,7 @@
                         <th>Genre</th>
                         <th>Email</th>
                         <th>Contact</th>
-                        <th>Adresse</th>
+                        {{-- <th>Adresse</th> --}}
                         <th>Date de naissance</th>
                         <th>Classe</th>
                         <th class="no-print">Action</th>
@@ -142,7 +142,7 @@
                             {{-- <td data-label="Identifiant">{{ $num++ }}</td> --}}
                             <td data-label="Matricule">{{ $etudiant->matricule }}</td>
                             <td data-label="Nom">
-                                @if ($etudiant->image)
+                                {{-- @if ($etudiant->image)
                                     <img src="{{ asset('storage/profile/' . $etudiant->image) }}" alt="User"
                                         class="rounded-circle profile-image"
                                         style="width: 40px; height: 35x; margin-top:-5px">
@@ -150,7 +150,7 @@
                                     <img src="{{ Avatar::create($etudiant->nom)->toBase64() }}" alt="User"
                                         class="rounded-circle profile-image"
                                         style="width: 40px; height: 35x; margin-top:-5px">
-                                @endif
+                                @endif --}}
 
                                 {{ $etudiant->nom }}
                             </td>
@@ -158,15 +158,15 @@
                             <td data-label="Genre">{{ $etudiant->genre }}</td>
                             <td data-label="Email">{{ $etudiant->email }}</td>
                             <td data-label="Contact">{{ $etudiant->contact }}</td>
-                            <td data-label="Adresse">{{ $etudiant->adresse }}</td>
-                            <td data-label="Date-naissance">{{ $etudiant->datenaiss }}</td>
+                            {{-- <td data-label="Adresse">{{ $etudiant->adresse }}</td> --}}
+                            <td data-label="Date-naissance">{{ \Carbon\Carbon::parse($etudiant->datenaiss)->format('d - m - Y') }}</td>
                             <td data-label="Classe">{{ $etudiant->nomclasse }}</td>
                             <td data-label="Action" class="action-icons no-print">
                                 <button class="btn  btn-sm" data-bs-toggle="modal"
                                     data-bs-target="#editEtudiant{{ $etudiant->id }}"
                                     data-file="{{ $etudiant->image }}" data-id="{{ $etudiant->id }}"
                                     data-nom="{{ $etudiant->nom }}" data-prenom="{{ $etudiant->prenom }}"
-                                    data-email="{{ $etudiant->email }}" data-datenaiss="{{ $etudiant->datenaiss }}"
+                                    data-email="{{ $etudiant->email }}" data-datenaiss="{{ $etudiant->datenaiss }}" data-filiere_id="{{ $etudiant->filiere_id }}"
                                     data-adresse="{{ $etudiant->adresse }}">
                                     <i class="fas fa-pen"></i>
                                 </button>
@@ -221,6 +221,29 @@
                                                 </div>
 
                                                 <div class="col-sm-6">
+                                                    <select class="select2-single form-control" name="genre"
+                                                        id="genre" style="width: 100%">
+                                                        <option value="H"
+                                                            @if (old('genre') == 'H') selected @endif>H
+                                                        </option>
+                                                        <option value="F"
+                                                            @if (old('genre') == 'F') selected @endif>F
+                                                        </option>
+                                                    </select>
+                                                    <div class="invalid-feedback">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-sm-6">
+                                                <select name="filiere_id" id="filiere_id" class="form-control" required>
+                                                    <option value="" disabled selected>Filière</option>
+                                                    @foreach ($listefilieres as $filiere)
+                                                            <option value="{{ $filiere->id }}" @if($filiere->id == $etudiant->filiere_id) selected @endif>{{ $filiere->filiere->nomfiliere }}</option>
+                                                    @endforeach
+                                                </select>
+                                                </div>
+
+                                                <div class="col-sm-6">
                                                     <select class="select2-multiple form-control" name="classe_id"
                                                         style="width: 100%" id="select2Multiple">
                                                         @foreach ($classes as $classe)
@@ -229,14 +252,18 @@
                                                                 {{ $classe->nomclasse }}</option>
                                                         @endforeach
                                                     </select>
-                                                    <div class="invalid-feedback">
-                                                    </div>
+                                                    <div class="invalid-feedback"></div>
                                                 </div>
 
+
+
+
+
                                                 <div class="col-sm-6">
-                                                    <input type="email" class="form-control"
-                                                        id="editEmail{{ $etudiant->id }}" name="email"
-                                                        placeholder="Email" value="{{ $etudiant->email }}" required>
+                                                    <input type="date" class="form-control"
+                                                        id="editDatenaiss{{ $etudiant->id }}" name="datenaiss"
+                                                        placeholder="datenaiss" value="{{ $etudiant->datenaiss }}"
+                                                        required>
                                                     <div class="invalid-feedback">
                                                     </div>
                                                 </div>
@@ -250,36 +277,22 @@
                                                     </div>
                                                 </div>
 
+
+
                                                 <div class="col-sm-6">
-                                                    <input type="date" class="form-control"
-                                                        id="editDatenaiss{{ $etudiant->id }}" name="datenaiss"
-                                                        placeholder="datenaiss" value="{{ $etudiant->datenaiss }}"
-                                                        required>
+                                                    <input type="email" class="form-control"
+                                                        id="editEmail{{ $etudiant->id }}" name="email"
+                                                        placeholder="Email" value="{{ $etudiant->email }}" required>
                                                     <div class="invalid-feedback">
                                                     </div>
                                                 </div>
 
-                                                <div class="col-sm-6">
-                                                    <select class="select2-single form-control" name="genre"
-                                                        id="genre" style="width: 100%">
-                                                        <option value="M"
-                                                            @if (old('genre') == 'M') selected @endif>M
-                                                        </option>
-                                                        <option value="F"
-                                                            @if (old('genre') == 'F') selected @endif>F
-                                                        </option>
-                                                    </select>
-                                                    <div class="invalid-feedback">
-                                                    </div>
-                                                </div>
 
                                                 <div class="col-sm-6">
                                                     <input type="text" class="form-control"
-                                                        id="adresse{{ $etudiant->id }}" name="adresse"
+                                                        id="adresse" name="adresse"
                                                         placeholder="Adresse" value="{{ $etudiant->adresse }}"
-                                                        required>
-                                                    <div class="invalid-feedback">
-                                                    </div>
+                                                        >
                                                 </div>
 
                                                 {{-- <div class="col-sm-6">
@@ -390,13 +403,62 @@
                                     placeholder="Prenoms" value="" required>
                                 <div class="invalid-feedback">
                                 </div>
-
                             </div>
+
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <select name="genre" id="genre" class="form-control">
+                                        <option value="" disabled selected>Genre</option>
+                                        <option value="H">H</option>
+                                        <option value="F">F</option>
+                                    </select>
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <select name="filiere_id" id="filiere_id" class="form-control" required>
+                                        <option value="" disabled selected>Filière</option>
+                                        @foreach ($listefilieres as $filiere)
+                                                <option value="{{ $filiere->id }}">{{ $filiere->filiere->nomfiliere }}</option>
+                                        @endforeach
+                                    </select>
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <select name="classe_id" id="classe_id" class="form-control w-100 rounded-0">
+                                        <option value="" disabled selected>Classe</option>
+                                        @foreach ($classes as $classe)
+                                            <option value="{{ $classe->id }}">{{ $classe->nomclasse }}</option>
+                                        @endforeach
+                                    </select>
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <input type="date" class="form-control" id="datenaiss" name="datenaiss"
+                                    placeholder="Date de naissance" max="2011-01-01" required>
+                                <div class="invalid-feedback"></div>
+                            </div>
+
 
                             <div class="col-sm-6">
                                 <input type="tel" class="form-control" id="contact" name="contact"
                                     placeholder="Contact" value="" required>
-                                <div class="invalid-feedback">
+                                <div class="invalid-feedback"></div>
+                            </div>
+
+
+                            <div class="col-sm-6" style="display: none">
+                                <div class="form-group">
+                                    <select name="role_id" id="role_id" class="form-control">
+                                        <option value="1">Etudiant</option>
+                                    </select>
                                 </div>
                             </div>
 
@@ -409,46 +471,11 @@
 
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <select name="genre" id="genre" class="form-control">
-                                        <option value="M">M</option>
-                                        <option value="F">F</option>
-                                    </select>
-
-                                </div>
-                            </div>
-
-                            <div class="col-sm-6">
-                                <input type="date" class="form-control" id="datenaiss" name="datenaiss"
-                                    placeholder="Date de naissance" max="{{ date('Y-m-d') }}" required>
-                                <div class="invalid-feedback">
-                                </div>
-                            </div>
-
-
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <select name="role_id" id="role_id" class="form-control">
-                                        <option value="1">Etudiant</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-6">
-                                <div class="form-group">
                                     <input type="text" class="form-control" id="adresse" name="adresse"
                                         placeholder="Adresse" value="" required>
                                 </div>
                             </div>
 
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <select name="classe_id" id="classe_id" class="form-control w-100  rounded-0">
-                                        @foreach ($classes as $classe)
-                                            <option value="{{ $classe->id }}">{{ $classe->nomclasse }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
                             {{-- <div class="col-sm-6" style="display: none">
                                 <input type="password" class="form-control" id="password" name="password"
                                     value="password" placeholder="Password" value="" required>
@@ -609,6 +636,19 @@
                         required: true,
                     },
 
+                    classe_id: {
+                        required: true,
+                    },
+
+                    adresse: {
+                        required: false,
+                    },
+
+
+                    genre: {
+                        required: true,
+                    },
+
                     email: {
                         email: true,
                         remote: {
@@ -636,6 +676,14 @@
 
                     datenaiss: {
                         required: "Veuillez entrer la date de naissance.",
+                    },
+
+                    classe_id: {
+                        required: "Veuillez selectionner la classe.",
+                    },
+
+                    genre: {
+                        required: "Veuillez selectionner le genre.",
                     },
 
                     matricule: {

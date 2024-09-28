@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ajouter un Enseignant</title>
+    <title>Enseignants</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- FontAwesome for icons (if needed) -->
@@ -160,24 +160,13 @@
                     @foreach ($professeurs as $professeur)
                         <tr>
                             <td data-label="Identifiant">{{ $num++ }}</td>
-                            <td data-label="Nom">
-                                @if ($professeur->image)
-                                    <img src="{{ asset('storage/profile/' . $professeur->image) }}" alt="User"
-                                        class="rounded-circle profile-image"
-                                        style="width: 40px; height: 35x; margin-top:-5px">
-                                @else
-                                    <img src="{{ Avatar::create($professeur->nom)->toBase64() }}" alt="User"
-                                        class="rounded-circle profile-image"
-                                        style="width: 40px; height: 35x; margin-top:-5px">
-                                @endif
-
-                                {{ $professeur->nom }}
+                            <td data-label="Nom">{{ $professeur->nom }}
                             </td>
                             <td data-label="Prenoms">{{ $professeur->prenom }}</td>
                             <td data-label="Email">{{ $professeur->email }}</td>
                             <td data-label="Contact">{{ $professeur->contact }}</td>
                             <td data-label="Matière">{{ $professeur->nommatieres }}</td>
-                            <td data-label="Classes">{{ $professeur->nomclasses }}</td>
+                            <td data-label="Classes">{{ str_replace(',', ' - ', $professeur->nomclasses) }}</td>
                             <td data-label="Action" class="action-icons no-print">
                                 <button class="btn  btn-sm" data-bs-toggle="modal"
                                     data-bs-target="#editTeacher{{ $professeur->id }}"
@@ -228,19 +217,20 @@
                                                     <div class="invalid-feedback">
                                                     </div>
                                                 </div>
+
                                                 <div class="col-sm-6">
-                                                    <input type="email" class="form-control"
-                                                        id="editEmail{{ $professeur->id }}" name="email"
-                                                        placeholder="Email" value="{{ $professeur->email }}"
+                                                    <input type="tel" class="form-control"
+                                                        id="editContact{{ $professeur->id }}" name="contact"
+                                                        placeholder="Contact" value="{{ $professeur->contact }}"
                                                         required>
                                                     <div class="invalid-feedback">
                                                     </div>
                                                 </div>
 
                                                 <div class="col-sm-6">
-                                                    <input type="tel" class="form-control"
-                                                        id="editContact{{ $professeur->id }}" name="contact"
-                                                        placeholder="Contact" value="{{ $professeur->contact }}"
+                                                    <input type="email" class="form-control"
+                                                        id="editEmail{{ $professeur->id }}" name="email"
+                                                        placeholder="Email" value="{{ $professeur->email }}"
                                                         required>
                                                     <div class="invalid-feedback">
                                                     </div>
@@ -282,13 +272,11 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="col-sm-6">
-                                                    <input type="text" class="form-control"
-                                                        id="adresse{{ $professeur->id }}" name="adresse"
-                                                        placeholder="Adresse" value="{{ $professeur->adresse }}"
-                                                        required>
-                                                    <div class="invalid-feedback">
-                                                    </div>
+                                                <div class="col-sm-12">
+                                                    <select name="role_id" id="role_id" class="form-control rounded-0">
+                                                        <option value="2">Professeur</option>
+                                                    </select>
+
                                                 </div>
 
                                                 {{-- <div class="col-sm-6">
@@ -318,13 +306,13 @@
                         <!-- Modal de Suppression -->
                         <div class="modal fade" id="deleteTeacher{{ $professeur->id }}" tabindex="-1"
                             aria-labelledby="deleteTeacherLabel{{ $professeur->id }}" aria-hidden="true">
-                            <div class="modal-dialog">
+                            <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-body text-center">
                                         <img src="{{ asset('frontend/dashboard/images/images.png') }}" width="50"
                                             height="50" alt=""><br><br>
-                                        <p id="sure">Êtes-vous sûr?</p>
-                                        <p>Supprimer cet enseignant ?</p>
+                                            <p id="sure">Êtes-vous sûr?</p>
+                                            <p>Supprimer l'enseignant <strong>{{$professeur->nom.' '.$professeur->prenom}}</strong> ?</p>
                                     </div>
                                     <div class="d-flex justify-content-around">
                                         <form action="{{ route('user.destroy', $professeur->id) }}" method="POST">
@@ -419,8 +407,8 @@
                                             <option value="{{ $matiere->id }}">{{ $matiere->nommatiere }}</option>
                                         @endforeach
                                     </select>
-                                    <div class="invalid-feedback">
-                                    </div>
+                                    <div class="invalid-feedback" style="font-size: 11px;">Veuillez sélectionner une ou plusieurs matières.</div>
+
                                 </div>
                             </div>
                             <div class="col-sm-6">
@@ -431,19 +419,20 @@
                                             <option value="{{ $classe->id }}">{{ $classe->nomclasse }}</option>
                                         @endforeach
                                     </select>
-                                    <div class="invalid-feedback"></div>
+                                    <div class="invalid-feedback" style="font-size: 11px;">Veuillez sélectionner une ou plusieurs classes.</div>
                                 </div>
                             </div>
 
 
 
-                            {{-- <div class="col-sm-12">
+                            <div class="col-sm-12">
                                 <select name="role_id" id="role_id" class="form-control rounded-0">
+                                    <option value="" disabled selected>Rôle</option>
                                     <option value="2">Professeur</option>
                                 </select>
 
-                            </div> --}}
-                            <div class="col-sm-12">
+                            </div>
+                            {{-- <div class="col-sm-12">
                                 <div class="form-group">
                                     <select name="role_id" id="role_id" class="form-control">
                                         <option value="" disabled selected>Rôle</option>
@@ -452,7 +441,7 @@
                                         <option value="3">Administrateur</option>
                                     </select>
                                 </div>
-                            </div>
+                            </div> --}}
 
 
                             <!--- <div class="col-sm-6">
@@ -617,11 +606,14 @@
                     },
 
                     classeselect3: {
-                        required: true,
+                        required: function(element) {
+                            return $('#classeselect3').val().length > 0;
+                        }
                     },
-
-                    matiere_id: {
-                        required: true,
+                    matiereselect3: {
+                        required: function(element) {
+                            return $('#matiereselect3').val().length > 0;
+                        }
                     },
 
 
@@ -655,7 +647,7 @@
                         required: "Veuillez selectionner la ou les classes",
                     },
 
-                    matiere_id: {
+                    matiereselect3: {
                         required: "Veuillez selectionner la ou les matieres",
                     },
 
@@ -684,6 +676,51 @@
                 },
                 unhighlight: function(element, errorClass, validClass) {
                     $(element).addClass('is-valid').removeClass('is-invalid');
+                }
+            });
+
+            // Validation explicite des sélections multiples lors de la soumission
+            $('#quickForm').on('submit', function(e) {
+                var isValid = true;
+
+                // Vérification de la sélection des matières
+                if ($('#matiereselect3').val().length === 0) {
+                    $('#matiereselect3').addClass('is-invalid');
+                    $('.invalid-feedback', '#matiereselect3').text("Veuillez sélectionner une ou plusieurs matières.");
+                    isValid = false;
+                } else {
+                    $('#matiereselect3').removeClass('is-invalid').addClass('is-valid');
+                }
+
+                // Vérification de la sélection des classes
+                if ($('#classeselect3').val().length === 0) {
+                    $('#classeselect3').addClass('is-invalid');
+                    $('.invalid-feedback', '#classeselect3').text("Veuillez sélectionner une ou plusieurs classes.");
+                    isValid = false;
+                } else {
+                    $('#classeselect3').removeClass('is-invalid').addClass('is-valid');
+                }
+
+                // Si l'un des champs n'est pas valide, on empêche la soumission du formulaire
+                if (!isValid) {
+                    e.preventDefault();
+                }
+            });
+
+            // Ajouter un événement change pour mettre à jour la validation en temps réel
+            $('#matiereselect3').on('change', function() {
+                if ($(this).val().length > 0) {
+                    $(this).removeClass('is-invalid').addClass('is-valid');
+                } else {
+                    $(this).addClass('is-invalid').removeClass('is-valid');
+                }
+            });
+
+            $('#classeselect3').on('change', function() {
+                if ($(this).val().length > 0) {
+                    $(this).removeClass('is-invalid').addClass('is-valid');
+                } else {
+                    $(this).addClass('is-invalid').removeClass('is-valid');
                 }
             });
         });

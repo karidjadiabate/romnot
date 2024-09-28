@@ -6,6 +6,7 @@ use App\Models\Sujet;
 use App\Http\Requests\StoreSujetRequest;
 use App\Http\Requests\UpdateSujetRequest;
 use App\Models\Classe;
+use App\Models\EtablissementFiliere;
 use App\Models\Filiere;
 use App\Models\Matiere;
 use App\Models\TypeSujet;
@@ -47,7 +48,9 @@ class SujetController extends Controller
 
         $filiere = new Filiere();
 
-        $filieres = $filiere->listefilierebyecole();
+        /* $filieres = $filiere->listefilierebyecole(); */
+        $filieres = EtablissementFiliere::with('filiere')->where('etablissement_id', auth()->user()->etablissement_id)->get();
+
 
         if ($userRole === 2) {
             // Si l'utilisateur est un professeur, récupérer les classes qu'il enseigne dans son école
@@ -58,7 +61,7 @@ class SujetController extends Controller
             // Utilisez ce tableau pour récupérer les matières
             $professeurMatiere = Matiere::findMany($matiereIds);
 
-        } elseif ($userRole === 3) {
+        } elseif ($userRole === 5) {
             // Si l'utilisateur est un administrateur, récupérer toutes les classes de l'école
             $fclasse = new Classe();
 
@@ -79,7 +82,7 @@ class SujetController extends Controller
         $cycleIds = [];
 
         // Obtenir toutes les matières pour l'administrateur, sinon inclure la matière du professeur (si disponible)
-        $matieres = ($userRole === 3) ? $matieres = $fmatiere->listematierebyecole() : Matiere::whereIn('cycle_id', $cycleIds)->get();
+        $matieres = ($userRole === 5) ? $matieres = $fmatiere->listematierebyecole() : Matiere::whereIn('cycle_id', $cycleIds)->get();
 
         if ($professeurMatiere) {
             $matieres->push($professeurMatiere);

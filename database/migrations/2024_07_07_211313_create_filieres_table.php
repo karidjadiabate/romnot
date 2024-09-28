@@ -15,10 +15,10 @@ return new class extends Migration
     {
         Schema::create('filieres', function (Blueprint $table) {
             $table->id();
-            $table->string('code');
             $table->string('nomfiliere');
-            $table->foreignIdFor(Niveau::class);
-            $table->foreignIdFor(Etablissement::class)->onDelete('cascade')->nullable();
+            $table->mediumText('description');
+            /* $table->foreignIdFor(Niveau::class);
+            $table->foreignIdFor(Etablissement::class)->onDelete('cascade')->nullable(); */
             $table->timestamps();
         });
     }

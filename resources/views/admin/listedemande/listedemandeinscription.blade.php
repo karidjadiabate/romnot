@@ -116,10 +116,13 @@
                         </tr>
                     </thead>&nbsp;&nbsp;
                     <tbody id="inscriptionTable">
+                        @php
+                            $num = 1;
+                        @endphp
                         <!-- Example rows, replace with dynamic data -->
                         @foreach ($listedemandeinscriptions as $listedemandeinscription)
                             <tr>
-                                <td data-label="Identifiant">{{ $listedemandeinscription->id }}</td>
+                                <td data-label="Identifiant">{{ $num++ }}</td>
                                 <td data-label="Date">{{ $listedemandeinscription->created_at->format('d/m/Y') }}</td>
                                 <td data-label="Nom">{{ $listedemandeinscription->nom }}</td>
                                 <td data-label="Prénoms">{{ $listedemandeinscription->prenom }}</td>

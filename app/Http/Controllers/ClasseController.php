@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Classe;
 use App\Http\Requests\StoreClasseRequest;
 use App\Http\Requests\UpdateClasseRequest;
+use App\Models\EtablissementFiliere;
 use App\Models\Filiere;
 use Illuminate\Http\Request;
 
@@ -17,13 +18,15 @@ class ClasseController extends Controller
     {
         $fclasse = new Classe();
 
-        $filiere = new Filiere();
+        $listefilieres = EtablissementFiliere::with('filiere')->where('etablissement_id', auth()->user()->etablissement_id)->get();
 
-        $filieres = $filiere->listefilierebyecole();
+        foreach ($listefilieres as $filiere) {
+            $filiere->niveaux = json_decode($filiere->niveau_id); // Convertir JSON en tableau
+        }
 
         $classes = $fclasse->listeclassbyecole();
 
-        return view('admin.classe.listeclasse',compact('classes','filieres'));
+        return view('admin.classe.listeclasse',compact('classes','listefilieres'));
     }
 
     /**
@@ -39,15 +42,26 @@ class ClasseController extends Controller
      */
     public function store(Request $request)
     {
+
+        $lastClass = Classe::orderBy('code', 'desc')->first();
+        $lastClassNumber = $lastClass ? (int) $lastClass->code : 0;
+
+        // Générer le nouveau code au format 0001, 0002, etc.
+        $newCode = str_pad(++$lastClassNumber, 4, '0', STR_PAD_LEFT);
+
+        // Enregistrer la classe
         Classe::create([
-            'code' => $request->code,
-            'nomclasse' => $request->nomclasse,
-            'filiere_id' => $request->filiere_id,
+            'etablissement_filiere_id' => $request->etablissement_filiere_id,
             'etablissement_id' => auth()->user()->etablissement_id,
+            'nomclasse' => $request->nomclasse,
+            'niveau_id' => $request->niveau_id,
+            'nbclasse' => $request->nbclasse,
+            'code' => $newCode,
         ]);
 
-        return to_route('classe.index')->with('success','Classe ajoutée avec success!');
+        return redirect()->route('classe.index')->with('success', 'Classe ajoutée avec succès!');
     }
+
 
     /**
      * Display the specified resource.
@@ -71,9 +85,10 @@ class ClasseController extends Controller
     public function update(UpdateClasseRequest $request, Classe $classe)
     {
         $classe->update([
-            'code' => $request->code,
             'nomclasse' => $request->nomclasse,
             'filiere_id' => $request->filiere_id,
+            'niveau_id' => $request->niveau_id,
+            'nbclasse' => $request->nbclasse,
             'etablissement_id' => auth()->user()->etablissement_id,
         ]);
 

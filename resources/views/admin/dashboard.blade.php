@@ -104,7 +104,7 @@
                                 </svg>
 
                                 <h5 class="card-title">Nombre total de sujets générés</h5>
-                                <p class="card-text">250</p>
+                                <p class="card-text">{{ $nbsujet }}</p>
                             </div>
                         </div>
                     </div>
