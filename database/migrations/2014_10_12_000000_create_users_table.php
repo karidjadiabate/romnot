@@ -2,6 +2,7 @@
 
 use App\Models\Classe;
 use App\Models\Etablissement;
+use App\Models\Filiere;
 use App\Models\Role;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -27,6 +28,7 @@ return new class extends Migration
             $table->foreignIdFor(Classe::class)->nullable();
             $table->foreignIdFor(Role::class);
             $table->foreignIdFor(Etablissement::class)->onDelete('cascade')->nullable();
+            $table->foreignIdFor(Filiere::class)->onDelete('cascade')->nullable();
             $table->text('selected_classes')->nullable();
             $table->text('matiere_id')->nullable();
             $table->timestamp('email_verified_at')->nullable();

@@ -2,6 +2,8 @@
 
 use App\Models\Classe;
 use App\Models\Etablissement;
+use App\Models\EtablissementFiliere;
+use App\Models\EtablissementMatiere;
 use App\Models\Filiere;
 use App\Models\Matiere;
 use App\Models\TypeSujet;
@@ -21,12 +23,13 @@ return new class extends Migration
             $table->id();
             $table->string('code')->nullable();
             $table->foreignIdFor(TypeSujet::class);
-            $table->foreignIdFor(Filiere::class);
-            $table->foreignIdFor(Matiere::class);
+            $table->foreignIdFor(EtablissementFiliere::class);
+            $table->foreignIdFor(EtablissementMatiere::class);
             $table->foreignIdFor(Classe::class);
             $table->foreignIdFor(User::class);
             $table->foreignIdFor(Etablissement::class);
             $table->integer('noteprincipale');
+            $table->string('consigne')->nullable();
             $table->time('heure');
             $table->enum('status', ['corrige', 'non-corrige']);
             $table->timestamps();

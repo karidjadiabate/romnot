@@ -15,7 +15,6 @@ return new class extends Migration
         Schema::create('matieres', function (Blueprint $table) {
             $table->id();
             $table->string('nommatiere');
-            $table->foreignIdFor(Etablissement::class)->onDelete('cascade')->nullable();
             $table->timestamps();
         });
     }

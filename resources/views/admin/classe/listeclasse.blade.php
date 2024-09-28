@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ajouter un Enseignant</title>
+    <title>Classes</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- FontAwesome for icons (if needed) -->
@@ -128,7 +128,6 @@
                 <table id="classeTable" class="table">
                     <thead class="table-aaa">
                         <tr class="aa">
-                            <th>Identifiant</th>
                             <th>Code</th>
                             <th>Nom</th>
                             <th>Filière</th>
@@ -143,12 +142,11 @@
                         @endphp
                         @foreach ($classes as $classe)
                             <tr>
-                                <td data-label="Identifiant">{{ $num++ }}</td>
                                 <td data-label="Code">{{ $classe->code }}</td>
                                 <td data-label="Nom">{{ $classe->nomclasse }}</td>
                                 <td data-label="Filière">{{ $classe->nomfiliere }}</td>
                                 <td data-label="Niveau">{{ $classe->nomniveau }}</td>
-                                <td data-label="Effectif de la classe">{{ $classe->effectif_classe }}</td>
+                                <td data-label="Effectif de la classe">{{ $classe->nbclasse }}</td>
                                 <td data-label="Action" class="action-icons no-print">
                                     <button class="btn  btn-sm" data-bs-toggle="modal"
                                         data-bs-target="#editClasse{{ $classe->id }}"
@@ -171,55 +169,74 @@
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content ">
                                         <h1 class="text-center">Modifier</h1>
-                                        <form action="{{ route('classe.update', $classe->id) }}" method="POST"
-                                            class="needs-validation" novalidate>
+                                        <form action="{{ route('classe.update', $classe->id) }}" method="POST" class="needs-validation" novalidate>
                                             @csrf
                                             @method('PUT')
                                             <div class="modal-body">
                                                 <div class="row g-3">
-
+                                                    <!-- Nom de la classe -->
                                                     <div class="col-sm-6">
-                                                        <input type="text" class="form-control" name="code"
-                                                            id="editLastName" placeholder="Nom de la classe"
-                                                            value="{{ $classe->code }}" required>
-                                                        <div class="invalid-feedback">
-                                                            Valid last name is required.
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-sm-6">
-                                                        <input type="text" name="nomclasse" class="form-control"
-                                                            id="editLastName" placeholder="Nom de la classe"
+                                                        <input type="text" name="nomclasse" class="form-control" placeholder="Nom de la classe"
                                                             value="{{ $classe->nomclasse }}" required>
                                                         <div class="invalid-feedback">
-                                                            Valid last name is required.
+                                                            Le nom de la classe est requis.
                                                         </div>
                                                     </div>
 
-                                                    <div class="col-sm-12">
-                                                        <select name="filiere_id" id="editLastName" name="filiere_id"
-                                                            class="form-control">
-                                                            <option value="">Selectionnez une filière</option>
-                                                            @foreach ($filieres as $filiere)
-                                                                <option value="{{ $filiere->id }}"
-                                                                    @if ($filiere->id == $classe->filiere_id) selected @endif>
-                                                                    {{ $filiere->nomfiliere }}
-                                                                    ({{ $filiere->nomniveau }})
+                                                    <!-- Sélection de la filière -->
+                                                    <div class="col-sm-6">
+                                                        <select name="etablissement_filiere_id" class="form-control" disabled required>
+                                                            <option value="">Sélectionnez une filière</option>
+                                                            @foreach ($listefilieres as $filiere)
+                                                                <option value="{{ $filiere->filiere_id }}"
+                                                                    {{ $filiere->filiere_id == $classe->etablissement_filiere_id ? 'selected' : '' }}>
+                                                                    {{ $filiere->filiere->nomfiliere }}
                                                                 </option>
                                                             @endforeach
                                                         </select>
                                                         <div class="invalid-feedback">
-                                                            Valid last name is required.
+                                                            La filière est requise.
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Sélection des niveaux -->
+                                                    <div class="col-sm-6">
+                                                        <select name="niveau_id" id="niveaux" class="form-control" required>
+                                                            @foreach ($listefilieres as $filiere)
+                                                                @php
+                                                                    $niveaux = $filiere->niveaux(); // Appel à la méthode niveaux pour obtenir les niveaux
+                                                                @endphp
+                                                                @foreach ($niveaux as $niveau)
+                                                                    <option value="{{ $niveau->id }}"
+                                                                        {{ $niveau->id == $classe->niveau_id ? 'selected' : '' }}>
+                                                                        {{ $niveau->code }}
+                                                                    </option>
+                                                                @endforeach
+                                                            @endforeach
+                                                        </select>
+                                                        <div class="invalid-feedback">
+                                                            Le niveau est requis.
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Effectif de la classe -->
+                                                    <div class="col-sm-6">
+                                                        <input type="number" name="nbclasse" class="form-control" placeholder="Effectif de la classe"
+                                                            value="{{ $classe->nbclasse }}" required>
+                                                        <div class="invalid-feedback">
+                                                            L'effectif de la classe est requis.
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
+
+                                            <!-- Boutons d'action -->
                                             <div class="d-flex justify-content-around">
                                                 <button type="submit" class="btn btn-success">Sauvegarder</button>
-                                                <button type="button" class="btn btn-danger"
-                                                    data-bs-dismiss="modal">Annuler</button>
+                                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Annuler</button>
                                             </div>
                                         </form>
+
                                     </div>
                                 </div>
                             </div>
@@ -292,14 +309,6 @@
                         @csrf
                         <div class="row g-3">
                             <!-- Fields for adding teacher details -->
-                            <div class="col-sm-6">
-                                <input type="text" class="form-control" name="code" id="editLastName"
-                                    placeholder="Code" value="" required>
-                                <div class="invalid-feedback">
-                                    Valid last name is required.
-                                </div>
-                            </div>
-
 
                             <div class="col-sm-6">
                                 <input type="text" name="nomclasse" class="form-control" id="editLastName"
@@ -309,18 +318,43 @@
                                 </div>
                             </div>
 
-                            <div class="col-sm-12">
+                            <div class="col-sm-6">
                                 <div class="form-group">
-                                    <select name="filiere_id" id="filiere_id" class="form-control w-100">
-                                        @foreach ($filieres as $filiere)
-                                            <option value="{{ $filiere->id }}">{{ $filiere->nomfiliere }}
-                                                ({{ $filiere->nomniveau }})
+                                    <select name="etablissement_filiere_id" id="etablissement_filiere_id" class="form-control" required>
+                                        <option value="">Sélectionnez une filière</option>
+                                        @foreach ($listefilieres as $filiere)
+                                            <option value="{{ $filiere->filiere_id }}">
+                                                {{ $filiere->filiere->nomfiliere }}
                                             </option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="invalid-feedback">Valid role is required.</div>
                             </div>
+
+                            <div class="col-sm-6">
+
+                            <div class="form-group">
+                                <select name="niveau_id" id="niveaux" class="form-control" required>
+                                    @foreach ($listefilieres as $filiere)
+                                        @php
+                                            $niveaux = $filiere->niveaux(); // Appel à la méthode niveaux
+                                        @endphp
+                                        @foreach ($niveaux as $niveau)
+                                            <option value="{{ $niveau->id }}">{{ $niveau->code }}</option>
+                                        @endforeach
+                                    @endforeach
+                                </select>
+                            </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <input type="number" name="nbclasse" class="form-control" id="editLastName"
+                                    placeholder="Effectif de la classe" value="" required>
+                                <div class="invalid-feedback">
+                                </div>
+                            </div>
+
                         </div>
                         <div class="modal-footer d-flex justify-content-between">
                             <button type="submit" class="btn btn-success">Sauvegarder</button>

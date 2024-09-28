@@ -10,7 +10,7 @@ class Matiere extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nommatiere','etablissement_id'];
+    protected $fillable = ['nommatiere'];
 
     public function classe()
     {
@@ -22,11 +22,17 @@ class Matiere extends Model
     {
         $ecoleId = auth()->user()->etablissement_id;
 
-        $listematiere = DB::table('matieres')
+        $listematiere = DB::table('etablissement_matiere AS em')
+            ->join('matieres AS m','m.id','=','em.matiere_id')
             ->where('etablissement_id','=', $ecoleId)
-            ->select('id','nommatiere')
+            ->select('em.id','nommatiere')
             ->get();
 
         return  $listematiere;
+    }
+
+    public function classes()
+    {
+        return $this->hasMany(Classe::class);
     }
 }

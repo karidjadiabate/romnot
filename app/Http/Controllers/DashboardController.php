@@ -14,12 +14,14 @@ class DashboardController extends Controller
         $nbetudiant = $fuser->nbetudiantparecole();
         $nbprofesseur = $fuser->nbprofesseurparecole();
         $nbfiliere = $fuser->nbfiliereparecole();
+        $nbsujet = $fuser->nbsujetgenereparecole();
+
         $nbetablissementaccepte = DemandeInscription::where('accepted', 1)->count();
         $nbetablissementrefuse = DemandeInscription::where('rejected', 1)->count();
 
         $nbadmin = User::where('role_id', 3)->count();
 
         return view('admin.dashboard',compact('nbetablissementaccepte','nbetablissementrefuse','nbadmin','nbetudiant',
-        'nbprofesseur','nbfiliere'));
+        'nbprofesseur','nbfiliere','nbsujet'));
     }
 }

@@ -468,6 +468,7 @@ select {
 
 .effect-1,
 .select-effect-1,
+.consigne-effect-1,
 .time-effect-1 {
     border: none;
     outline: none;
@@ -507,6 +508,11 @@ select {
     display: none;
 }
 
+.consigne-effect-1:focus~.placeholder,
+.consigne-effect-1:not(:placeholder-shown)~.placeholder {
+    display: none;
+}
+
 .overflow-hidden {
     overflow: hidden;
 }
@@ -514,6 +520,7 @@ select {
 /* effect 1 */
 .effect-1,
 .select-effect-1,
+.consigne-effect-1,
 .time-effect-1 {
     border: 1px solid #4A41C5;
     /* padding-left: 0; */
@@ -521,6 +528,7 @@ select {
 
 .effect-1+.border,
 .select-effect-1+.border,
+.consigne-effect-1+.border,
 .time-effect-1+.border {
     position: absolute;
     bottom: 0;
@@ -533,6 +541,7 @@ select {
 
 .effect-1:focus+.border,
 .select-effect-1:focus+.border,
+.consigne-effect-1:focus+.border,
 .time-effect-1:focus+.border {
     width: 100%;
 }
@@ -541,6 +550,8 @@ select {
 .effect-1:not(:placeholder-shown)~.label,
 .select-effect-1:focus~.label,
 .select-effect-1:not([value=""])~.label,
+.consigne-effect-1:focus~.label,
+.consigne-effect-1:not(:placeholder-shown)~.label,
 .time-effect-1:focus~.label,
 .time-effect-1:not(:placeholder-shown)~.label {
     top: -1rem;
@@ -633,6 +644,18 @@ img {
     height: 50px;
 }
 
+.consigne-effect-1 {
+    -webkit-appearance: none;
+    /* For Safari */
+    -moz-appearance: none;
+    /* For Firefox */
+    appearance: none;
+    /* For other browsers */
+    padding-right: 0.5rem;
+    /* Space for custom time icon */
+    height: 50px;
+}
+
 .time-group::after {
     font-weight: 900;
     /* Use solid icons */
@@ -648,6 +671,12 @@ img {
 
 .time-group .time-effect-1:focus+.border+.label+ ::after,
 .time-group .time-effect-1:not(:placeholder-shown)+.border+.label+ ::after {
+    transform: translateY(-50%) rotate(180deg);
+    /* Rotate clock icon on focus */
+}
+
+.time-group .consigne-effect-1:focus+.border+.label+ ::after,
+.time-group .consigne-effect-1:not(:placeholder-shown)+.border+.label+ ::after {
     transform: translateY(-50%) rotate(180deg);
     /* Rotate clock icon on focus */
 }

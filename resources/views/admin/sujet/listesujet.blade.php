@@ -174,11 +174,11 @@
                         </ul>
                     </div>
 
-                    @if (auth()->user()->role_id === 2)
+                    @if (auth()->user()->role_id == 2)
                         <a href="{{ route('sujetprofesseur.create') }}" class="btn btn-custom btn-ajouter"
                             onclick="window.location.href='{{ asset('frontend/dashboard/html/sujt.html') }}'"><i
                                 class="fa fa-plus"></i> Creer un sujet</a>
-                    @elseif(auth()->user()->role_id === 3)
+                    @elseif(auth()->user()->role_id == 5)
                         <a href="{{ route('sujetadmin.create') }}" class="btn btn-custom btn-ajouter"
                             onclick="window.location.href='{{ asset('frontend/dashboard/html/sujt.html') }}'"><i
                                 class="fa fa-plus"></i> Creer un sujet</a>
@@ -252,7 +252,7 @@
                         <tr class="aa">
                             {{-- <th>Identifiant</th> --}}
                             <th>Code</th>
-                            @if (auth()->user()->role_id === 3)
+                            @if (auth()->user()->role_id == 5)
                                 <th>Professeur</th>
                             @endif
                             <th>Matière</th>
@@ -268,7 +268,7 @@
                             <tr>
                                 {{-- <td data-label="Identifiant">{{ $listesujet->id }}</td> --}}
                                 <td data-label="Code">{{ $listesujet->code }}</td>
-                                @if (auth()->user()->role_id === 3)
+                                @if (auth()->user()->role_id == 5)
                                     <td data-label="User">{{ $listesujet->nom . ' ' . $listesujet->prenom }}</td>
                                 @endif
                                 <td data-label="Matière">{{ $listesujet->nommatiere }}</td>

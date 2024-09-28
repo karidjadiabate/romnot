@@ -1,7 +1,8 @@
 <?php
 
 use App\Models\Etablissement;
-use App\Models\Filiere;
+use App\Models\EtablissementFiliere;
+use App\Models\Niveau;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,8 +18,10 @@ return new class extends Migration
             $table->id();
             $table->string('code')->nullable();
             $table->string('nomclasse');
-            $table->foreignIdFor(Filiere::class)->onDelete('cascade');
+            $table->foreignIdFor(EtablissementFiliere::class);
+            $table->foreignIdFor(Niveau::class);
             $table->foreignIdFor(Etablissement::class)->onDelete('cascade');
+            $table->string('nbclasse');
             $table->timestamps();
         });
     }

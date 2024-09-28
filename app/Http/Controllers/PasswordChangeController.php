@@ -24,11 +24,11 @@ class PasswordChangeController extends Controller
         $user->must_change_password = false;
         $user->save();
 
-        if(auth()->user()->role_id === 3){
+        if(auth()->user()->role_id === 5){
             return redirect()->route('admin.dashboard')->with('status', 'Mot de passe changé avec succès !');
         }elseif(auth()->user()->role_id === 2){
             return redirect()->route('professeur.dashboard')->with('status', 'Mot de passe changé avec succès !');
-        }elseif(auth()->user()->role_id === 3){
+        }elseif(auth()->user()->role_id === 6){
             return redirect()->route('superadmin.dashboard')->with('status', 'Mot de passe changé avec succès !');
         }
     }

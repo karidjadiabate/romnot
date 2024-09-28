@@ -31,8 +31,8 @@ class FortifyServiceProvider extends ServiceProvider
 
                 $route = match ($role) {
                     2 => '/professeur',
-                    3 => '/admin',
-                    4 => '/superadmin',
+                    5 => '/admin',
+                    6 => '/superadmin',
 
                     default => '/'
                 };

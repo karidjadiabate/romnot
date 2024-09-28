@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Matiere;
 use App\Http\Requests\StoreMatiereRequest;
 use App\Http\Requests\UpdateMatiereRequest;
+use App\Imports\MatiereImport;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class MatiereController extends Controller
 {
@@ -14,9 +16,7 @@ class MatiereController extends Controller
      */
     public function index()
     {
-        $fmatiere = new Matiere();
-
-        $matieres = $fmatiere->listematierebyecole();
+        $matieres = Matiere::all();
 
         return view('admin.matiere.listematiere',compact('matieres'));
     }
@@ -36,7 +36,6 @@ class MatiereController extends Controller
     {
         Matiere::create([
             'nommatiere' => $request->nommatiere,
-            'etablissement_id' => auth()->user()->etablissement_id,
         ]);
 
         return to_route('matiere.index')->with('success','Matière ajoutée avec success!');
@@ -82,4 +81,26 @@ class MatiereController extends Controller
 
         return to_route('matiere.index')->with('danger','Matière supprimée avec success!');
     }
+
+    public function importMatiereExcelData(Request $request)
+    {
+        // Valider le fichier d'importation
+        $request->validate([
+            'import_file' => [
+                'required',
+                'file'
+            ],
+        ]);
+
+        try {
+            // Importer les données Excel
+            Excel::import(new MatiereImport, $request->file('import_file'));
+
+            return redirect()->back()->with('status', 'Importation réussie avec succès !');
+        } catch (\Exception $e) {
+            // En cas d'erreur, rediriger avec un message d'erreur
+            return redirect()->back()->with('error', 'Erreur lors de l\'importation : ' . $e->getMessage());
+        }
+    }
+
 }

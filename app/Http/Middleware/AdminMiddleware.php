@@ -17,7 +17,7 @@ class AdminMiddleware
     {
         if (auth()->check()) {
             $user = auth()->user();
-            if ($user->role_id === 3) {
+            if ($user->role_id === 5) {
                 return $next($request);
             } else {
                 abort(403, 'Accès refusé');

@@ -10,20 +10,26 @@ class Filiere extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['code','nomfiliere','niveau_id','etablissement_id'];
+    protected $fillable = ['code','nomfiliere','description'];
 
-    public function listefilierebyecole()
+    /* public function listefilierebyecole()
     {
         $ecoleId = auth()->user()->etablissement_id;
 
-        $listefiliere = DB::table('filieres AS f')
-            ->join('niveaux AS n','n.id','=','f.niveau_id')
-            ->leftjoin('classes AS c','c.filiere_id','=','f.id')
-            ->where('f.etablissement_id','=', $ecoleId)
-            ->select('f.id','f.nomfiliere','f.code','n.nomniveau','f.niveau_id',DB::raw('COUNT(c.id) AS nbclasse'))
-            ->groupBy('f.id', 'f.nomfiliere', 'f.code', 'n.nomniveau', 'f.niveau_id')
+        $listefiliere = DB::table('etablissement_filiere AS ef')
+            ->join('niveaux AS n','n.id','=','ef.niveau_id')
+            ->join('filieres AS f','f.id','=','ef.filiere_id')
+            ->leftJoin('classes AS c', 'c.etablissement_filiere_id', '=', 'ef.id')
+            ->where('ef.etablissement_id','=', $ecoleId)
+            ->select('f.id','f.nomfiliere','n.nomniveau','ef.niveau_id',DB::raw('COUNT(c.id) AS nbclasse'))
+            ->groupBy('f.id', 'f.nomfiliere', 'n.nomniveau', 'ef.niveau_id')
             ->get();
 
         return  $listefiliere;
+    } */
+
+    public function classes()
+    {
+        return $this->hasManyThrough(Classe::class, EtablissementFiliere::class);
     }
 }

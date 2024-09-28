@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="{{ asset('frontend/dashboard/html/admin.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/dashboard/css/lists.css') }}">
 
-    <title>Registration Form</title>
+    <title>Sujet</title>
 </head>
 
 <body>
@@ -63,7 +63,7 @@
     @endif
 
 
-    @if (intval(auth()->user()->role_id) === 2)
+    @if (auth()->user()->role_id == 2)
         <form action="{{ route('sujetprofesseur.store') }}" class="form" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="form-step form-step-active">
@@ -88,13 +88,13 @@
                             <option value="" disabled selected hidden>
                                 Sélectionner la matière
                             </option>
-                            @if (intval(auth()->user()->role_id) === 3)
+                            @if (auth()->user()->role_id == 5)
                                 @foreach ($matieres as $matiere)
                                     <option value="{{ $matiere->id }}">{{ $matiere->nommatiere }}</option>
                                 @endforeach
-                            @elseif(intval(auth()->user()->role_id) === 2)
+                            @elseif(auth()->user()->role_id == 2)
                                 @foreach ($professeurMatiere as $matiere)
-                                    <option value="{{ $matiere->id }}">{{ $matiere->nommatiere }}</option>
+                                    <option value="{{ $matiere->id }}">{{ $matiere->matiere->nommatiere }}</option>
                                 @endforeach
                             @endif
                         </select>
@@ -108,8 +108,8 @@
                             <option value="" disabled selected hidden>
                                 Sélectionnez la Filière
                             </option>
-                            @foreach ($filieres as $filiere)
-                                <option value="{{ $filiere->id }}">{{ $filiere->nomfiliere }}</option>
+                            @foreach ($listefilieres as $filiere)
+                                <option value="{{ $filiere->id }}">{{ $filiere->filiere->nomfiliere }}</option>
                             @endforeach
                         </select>
                         <span class="border"></span>
@@ -134,6 +134,13 @@
                         <label for="time" class="label">Durée</label>
                         <input type="text" name="heure" id="time" class="time-effect-1"
                             placeholder="hh:mm" onfocus="this.type='time'" onblur="this.type='time'" required />
+                        <span class="border"></span>
+                    </div>
+
+                    <div class="input-group time-group">
+                        <label for="Consigne" class="label">Consigne</label>
+                        <input type="text" name="consigne" id="consigne" class="consigne-effect-1"
+                            placeholder="Entrez une Consigne" required />
                         <span class="border"></span>
                     </div>
                 </div>
@@ -275,7 +282,7 @@
                 </div>
             </div>
         </form>
-    @elseif(intval(auth()->user()->role_id) === 3)
+    @elseif(auth()->user()->role_id === 5)
         <form action="{{ route('sujetadmin.store') }}" class="form" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="form-step form-step-active">
@@ -300,7 +307,7 @@
                             <option value="" disabled selected hidden>
                                 Sélectionner la matière
                             </option>
-                            @if (intval(auth()->user()->role_id) === 3)
+                            @if (intval(auth()->user()->role_id) === 5)
                                 @foreach ($matieres as $matiere)
                                     <option value="{{ $matiere->id }}">{{ $matiere->nommatiere }}</option>
                                 @endforeach
@@ -320,8 +327,8 @@
                             <option value="" disabled selected hidden>
                                 Sélectionnez la Filière
                             </option>
-                            @foreach ($filieres as $filiere)
-                                <option value="{{ $filiere->id }}">{{ $filiere->nomfiliere }}</option>
+                            @foreach ($listefilieres as $filiere)
+                                <option value="{{ $filiere->id }}">{{ $filiere->filiere->nomfiliere }}</option>
                             @endforeach
                         </select>
                         <span class="border"></span>
@@ -346,6 +353,13 @@
                         <label for="time" class="label">Durée</label>
                         <input type="text" name="heure" id="time" class="time-effect-1"
                             placeholder="hh:mm" onfocus="this.type='time'" onblur="this.type='time'" required />
+                        <span class="border"></span>
+                    </div>
+
+                    <div class="input-group time-group">
+                        <label for="Consigne" class="label">Consigne</label>
+                        <input type="text" name="consigne" id="consigne" class="consigne-effect-1"
+                            placeholder="Entrez une Consigne" required />
                         <span class="border"></span>
                     </div>
                 </div>
