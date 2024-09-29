@@ -17,8 +17,6 @@ return new class extends Migration
             $table->id();
             $table->string('nomfiliere');
             $table->mediumText('description');
-            /* $table->foreignIdFor(Niveau::class);
-            $table->foreignIdFor(Etablissement::class)->onDelete('cascade')->nullable(); */
             $table->timestamps();
         });
     }

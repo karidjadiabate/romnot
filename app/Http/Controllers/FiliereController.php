@@ -37,10 +37,8 @@ class FiliereController extends Controller
     public function store(Request $request)
     {
         Filiere::create([
-            'code' => $request->code,
             'nomfiliere' => $request->nomfiliere,
-            'niveau_id' => $request->niveau_id,
-            'etablissement_id' => auth()->user()->etablissement_id,
+            'description' => $request->description,
         ]);
 
         return to_route('filiere.index')->with('success','Filière ajoutée avec success!');
@@ -68,10 +66,8 @@ class FiliereController extends Controller
     public function update(UpdateFiliereRequest $request, Filiere $filiere)
     {
         $filiere->update([
-            'code' => $request->code,
             'nomfiliere' => $request->nomfiliere,
-            'niveau_id' => $request->niveau_id,
-            'etablissement_id' => auth()->user()->etablissement_id,
+            'description' => $request->description,
         ]);
 
         return to_route('filiere.index')->with('warning', 'Filière modifiée avec succès!');
