@@ -28,9 +28,8 @@ class Sujet extends Model
 
         $listesujet = DB::table('sujets AS s')
             ->join('etablissement_matiere AS em', 'em.matiere_id', '=', 's.etablissement_matiere_id')
-            ->join('etablissement_filiere AS et', 'et.filiere_id', '=', 's.etablissement_filiere_id')
             ->join('matieres AS m', 'm.id', '=', 'em.matiere_id')
-            ->join('filieres AS f', 'f.id', '=', 'et.filiere_id')
+            ->join('filieres AS f', 'f.id', '=', 's.etablissement_filiere_id')
             ->join('classes AS c', 'c.id', '=', 's.classe_id')
             ->join('users AS u', 'u.id', '=', 's.user_id')
             ->select('s.id', 's.code', 'm.nommatiere', 'f.nomfiliere', 'c.nomclasse', DB::raw("DATE(s.created_at) as created_date"), 's.status')
@@ -46,9 +45,8 @@ class Sujet extends Model
 
         $listesujet = DB::table('sujets AS s')
             ->join('etablissement_matiere AS em', 'em.matiere_id', '=', 's.etablissement_matiere_id')
-            ->join('etablissement_filiere AS et', 'et.filiere_id', '=', 's.etablissement_filiere_id')
             ->join('matieres AS m', 'm.id', '=', 'em.matiere_id')
-            ->join('filieres AS f', 'f.id', '=', 'et.filiere_id')
+            ->join('filieres AS f', 'f.id', '=', 's.etablissement_filiere_id')
             ->join('classes AS c', 'c.id', '=', 's.classe_id')
             ->join('users AS u', 'u.id', '=', 's.user_id')
             ->select('s.id', 's.code', 'm.nommatiere', 'f.nomfiliere', 'c.nomclasse', DB::raw("DATE(s.created_at) as created_date"), 's.status', 'u.nom', 'u.prenom')

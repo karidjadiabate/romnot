@@ -33,7 +33,8 @@ class FiliereEtablissementController extends Controller
             'f.nomfiliere',
             DB::raw('GROUP_CONCAT(DISTINCT n.code SEPARATOR ", ") AS niveaux'), // Concaténer les niveaux
         )
-        ->groupBy('ef.id', 'f.nomfiliere')
+        ->groupBy('ef.id', 'f.nomfiliere','ef.code','etablissement_id','ef.filiere_id','ef.niveau_id','ef.directeurfiliere',
+        'ef.nbclasse','ef.created_at','ef.updated_at')
         ->get();
 
 

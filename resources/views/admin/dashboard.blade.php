@@ -36,7 +36,7 @@
     <!-- accueil -->
     <!-- titre -->
     <div class="container text-center printableArea principal">
-        @if (auth()->user()->role_id == 2 || auth()->user()->role_id == 3)
+        @if (auth()->user()->role_id == 2 || auth()->user()->role_id == 5)
             <h1 class="welcome">Bienvenue <span>{{ auth()->user()->etablissement->nometablissement }}</span></h1>
         @endif
     </div>
@@ -49,7 +49,7 @@
     <div class="container text-center mt-4">
         <!-- les  cartes-->
         <div class="container">
-            @if (intval(auth()->user()->role_id) === 3)
+            @if (auth()->user()->role_id == 5)
                 <div class="row text-start">
                     <div class="col-md-3 col-12 mb-4">
                         <div class="card">
@@ -109,7 +109,7 @@
                         </div>
                     </div>
                 </div>
-            @elseif (intval(auth()->user()->role_id) === 4)
+            @elseif (auth()->user()->role_id == 6)
                 <div class="row text-start">
                     <div class="col-md-3 col-12 mb-4">
                         <div class="card">
@@ -173,7 +173,7 @@
         </div>
         <!--  -->
 
-        @if (intval(auth()->user()->role_id) === 3)
+        @if (auth()->user()->role_id == 5)
             <div class="container">
                 <div class="row ">
                     <!-- Première section -->
