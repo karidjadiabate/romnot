@@ -72,7 +72,7 @@ class DemandeInscriptionController extends Controller
         ]);
 
         // Envoyer la notification aux administrateurs
-        $adminUsers = User::where('role_id', 4)->get();
+        $adminUsers = User::where('role_id', 6)->get();
         foreach ($adminUsers as $admin) {
             $admin->notify(new NouvelleDemandeInscription($demandeinscription));
         }
@@ -114,7 +114,7 @@ class DemandeInscriptionController extends Controller
                 'etablissement_id' => $etablissement->id, // Utiliser l'ID de l'établissement créé
                 'contact' => $demande->contact,
                 'email' => $demande->email,
-                'role_id' => 3,
+                'role_id' => 5,
                 'password' => $passwordHashed,
                 'from_demande_inscription' => true
             ];

@@ -104,7 +104,7 @@ class DemoController extends Controller
                 'etablissement_id' => $etablissement->id, // Utiliser l'ID de l'établissement créé
                 'contact' => $demande->numerotel,
                 'email' => $demande->email,
-                'role_id' => 3,
+                'role_id' => 5,
                 'password' => $passwordHashed
             ];
 
