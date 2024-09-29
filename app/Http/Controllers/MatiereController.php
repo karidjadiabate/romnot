@@ -64,7 +64,6 @@ class MatiereController extends Controller
     {
         $matiere->update([
             'nommatiere' => $request->nommatiere,
-            'etablissement_id' => auth()->user()->etablissement_id,
         ]);
 
         return to_route('matiere.index')->with('warning', 'Matière modifiée avec succès!');

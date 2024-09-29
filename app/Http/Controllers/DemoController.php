@@ -62,7 +62,7 @@ class DemoController extends Controller
         ]);
 
         // Envoyer la notification aux administrateurs
-        $adminUsers = User::where('role_id', 4)->get();
+        $adminUsers = User::where('role_id', 6)->get();
         foreach ($adminUsers as $admin) {
             $admin->notify(new NouvelleDemandeDemo($demo));
         }
