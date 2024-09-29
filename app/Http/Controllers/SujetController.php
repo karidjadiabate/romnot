@@ -107,6 +107,7 @@ class SujetController extends Controller
             'matiere_id' => 'required',
             'classe_id' => 'required',
             'noteprincipale' => 'required|min:1',
+            'consigne' => 'required',
             'heure' => 'required',
         ],
         [
